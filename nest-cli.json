@@ -34,7 +34,11 @@
       "entryFile": "main",
       "sourceRoot": "apps/local-account-server/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/local-account-server/tsconfig.app.json"
+        "tsConfigPath": "apps/local-account-server/tsconfig.app.json",
+        "assets": [
+          "**/*.hbs",
+          "**/*.css"
+        ]
       }
     }
   }

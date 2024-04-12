@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>App</title>
+  <link rel="stylesheet" href="../public/bulma.css">
+  <link rel="stylesheet" href="../public/styles.css">
+</head>
+
+<body>
+  <div class="card" id="authorize-card">
+    <header class="card-header">
+      <p class="card-header-title">
+        An application would like to connect to your account
+      </p>
+    </header>
+    <div class="card-content">
+      <div class="content">
+
+        <span id="oauth-request">The application "{{clientName}}" would like the ability to access your photos.</span>
+        <span id="openid-request" class="hidden">Signing in to the application "{{clientName}}" will share your name and
+          email address with the application, and will let the application access your photos.</span>
+
+      </div>
+    </div>
+    <footer class="card-footer">
+      <div class="card-footer-item"><a href={{redirectUri}}?code={{code}} class=" button is-primary"
+          id="redirect-uri">Approve</a></div>
+    </footer>
+  </div>
+</body>
+
+</html>

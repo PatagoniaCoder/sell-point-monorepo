@@ -7,9 +7,9 @@ export class IndexDto {
 
   @IsString()
   @IsNotEmpty()
-  clientID: string;
+  client_id: string;
 
   @IsString()
   @IsNotEmpty()
-  redirectUri: string;
+  code_challenge: string;
 }

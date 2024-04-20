@@ -1,8 +1,19 @@
-import { Controller, Get, Query, Render } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Redirect,
+  Render,
+  Req,
+  Res,
+} from '@nestjs/common';
+import { IndexDto } from './dto/index.dto';
 import { LocalAccountServerService } from './local-account-server.service';
-import { IndexDto } from './index.dto';
+import { Request, Response } from 'express';
 
-@Controller()
+@Controller('account')
 export class LocalAccountServerController {
   constructor(
     private readonly localAccountServerService: LocalAccountServerService,
@@ -10,7 +21,25 @@ export class LocalAccountServerController {
 
   @Get()
   @Render('index')
-  getHello(@Query() query: IndexDto) {
-    return this.localAccountServerService.getHello();
+  index(@Res() res: Response, @Req() req: Request) {
+    return;
+  }
+
+  @Post()
+  @Render('concern')
+  concern(
+    @Query() query: IndexDto,
+    @Body() body: any,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    console.log(query);
+    console.log(body);
+    return { ...query, code: '5555' };
+  }
+
+  @Get('/concern')
+  aprobeConcern(@Res() res: Response, @Req() req: Request) {
+    return res.end();
   }
 }

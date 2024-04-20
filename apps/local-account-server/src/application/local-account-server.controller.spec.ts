@@ -11,12 +11,16 @@ describe('LocalAccountServerController', () => {
       providers: [LocalAccountServerService],
     }).compile();
 
-    localAccountServerController = app.get<LocalAccountServerController>(LocalAccountServerController);
+    localAccountServerController = app.get<LocalAccountServerController>(
+      LocalAccountServerController,
+    );
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(localAccountServerController.getHello()).toBe('Hello World!');
+    it('should render a index page', () => {
+      expect(localAccountServerController.index(null)).toEqual({
+        message: 'Hello World!',
+      });
     });
   });
 });

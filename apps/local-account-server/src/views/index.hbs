@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>App</title>
+  <link rel="stylesheet" href="../public/bulma.css">
+  <link rel="stylesheet" href="../public/styles.css">
+</head>
+
+<body>
+  <section class="section">
+    <form id="myform" method="post" class="container">
+      <div class="card" id="log-in-card">
+        <header class="card-header">
+          <h1 class="card-header-title">
+            Log In
+          </h1>
+        </header>
+        <div class="card-content">
+          <div class="content">
+            <div class="field">
+              <label for="username" class="label">Username</label>
+              <div class="control">
+                <input name="username" id="username" class="input" type="text" placeholder="user@example.com">
+              </div>
+            </div>
+            <div class="field">
+              <label for="password" class="label">Password</label>
+              <div class="control">
+                <input name="password" id="password" class="input" type="password">
+              </div>
+            </div>
+            <p style="text-align: right;"><a href="#" id="open-userinfo">Forgot your password?</a></p>
+          </div>
+        </div>
+        <footer class="card-footer">
+          <div class="card-footer-item"><button type="submit" class="button is-primary">Log In</button></div>
+          
+        </footer>
+    </form>
+  </section>
+</body>
+
+</html>

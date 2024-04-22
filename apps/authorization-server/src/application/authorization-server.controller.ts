@@ -22,12 +22,12 @@ export class AuthorizationServerController {
     @Query('code_challenge') codeChallenge: string,
     @Query('code') code: string,
   ) {
-    const token = await this.appService.exchangeCodeForToken(
+    const { token, redirectUri } = await this.appService.exchangeCodeForToken(
       state,
       clientId,
       codeChallenge,
       code,
     );
-    res.redirect('http://localhost:3000/home');
+    res.redirect(`${redirectUri}?token=${token}`);
   }
 }

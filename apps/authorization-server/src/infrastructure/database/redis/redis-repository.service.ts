@@ -30,13 +30,12 @@ export class RedisRepositoryService implements VerificationCodeRepository {
   async findCodeVerify(uuid: string): Promise<VerificationCodeEntity | null> {
     const value = await this.redis.get(uuid);
     if (!value) return null;
-    const { codeChallenge, codeVerifier, redirectUri }: VerificationCodeEntity =
+    const { codeVerifier, redirectUri }: VerificationCodeEntity =
       JSON.parse(value);
     const codeVerifyObject = new VVerificationCode(
       uuid,
       codeVerifier,
       redirectUri,
-      codeChallenge,
     );
     return codeVerifyObject;
   }

@@ -12,4 +12,8 @@ export class IndexDto {
   @IsString()
   @IsNotEmpty()
   code_challenge: string;
+
+  @IsString()
+  @IsNotEmpty()
+  redirect: string;
 }

@@ -32,10 +32,9 @@ export class AuthorizationServerService {
       state,
       codeVerifier,
       client.redirectUri,
-      codeChallenge,
     );
     await this.verificationCodeRepository.saveCodeVerify(codeVerifyObject);
-    const authorizationUrl = `${this.configService.get('LOCAL_ACCOUNT_SERVER_URL')}/account?response_type=code&client_id=${clientId}&code_challenge=${codeChallenge}&code_challenge_method=S256&state=${state}`;
+    const authorizationUrl = `${this.configService.get('LOCAL_ACCOUNT_SERVER_URL')}/account?response_type=code&client_id=${clientId}&code_challenge=${codeChallenge}&code_challenge_method=S256&state=${state}&redirect=${this.configService.get('AUTHORIZATION_SERVER_URL')}/authorization/token`;
     return authorizationUrl;
   }
 
@@ -45,9 +44,17 @@ export class AuthorizationServerService {
     codeChallenge: string,
     code: string,
   ) {
-    // restore codeVerifier
     const value = await this.verificationCodeRepository.findCodeVerify(state);
-    return { token: '1235466548' };
+    const storeCodeChallenge = this.sha256(value.codeVerifier);
+    if (codeChallenge !== storeCodeChallenge) {
+      throw new BadRequestException('Bad Code Challenge');
+    }
+    const client = await this.clientRepository.findClientById(clientId);
+    if (!client) {
+      throw new BadRequestException('Client does not exist');
+    }
+    const token = JSON.stringify({ clientId, code });
+    return { token, redirectUri: client.redirectUri };
   }
 
   private hex2bin(s: string) {

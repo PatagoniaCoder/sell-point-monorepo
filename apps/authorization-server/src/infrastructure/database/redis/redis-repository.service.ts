@@ -1,10 +1,10 @@
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
-import { Redis } from 'ioredis';
 import { VerificationCodeEntity } from 'apps/authorization-server/src/domain/entities/verification-code.entity';
 import { VerificationCodeRepository } from 'apps/authorization-server/src/domain/repositories/verification-code.repository';
 import { VVerificationCode } from 'apps/authorization-server/src/domain/value-objects/verification-code.value';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class RedisRepositoryService implements VerificationCodeRepository {
@@ -30,13 +30,12 @@ export class RedisRepositoryService implements VerificationCodeRepository {
   async findCodeVerify(uuid: string): Promise<VerificationCodeEntity | null> {
     const value = await this.redis.get(uuid);
     if (!value) return null;
-    const { codeChallenge, codeVerifier, redirectUri }: VerificationCodeEntity =
+    const { codeVerifier, redirectUri }: VerificationCodeEntity =
       JSON.parse(value);
     const codeVerifyObject = new VVerificationCode(
       uuid,
       codeVerifier,
       redirectUri,
-      codeChallenge,
     );
     return codeVerifyObject;
   }

@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import { JwtService } from '@nestjs/jwt';
 import { ClientRepository } from '../domain/repositories/client.repository';
 import { AuthorizationServerService } from './authorization-server.service';
 import { VerificationCodeRepository } from '../domain/repositories/verification-code.repository';
@@ -34,6 +35,10 @@ describe('AuthorizationServerService', () => {
             get: jest.fn().mockReturnValue('http://localhost'),
           },
         },
+        {
+          provide: JwtService,
+          useValue: { signAsync: jest.fn() },
+        },
       ],
     }).compile();
 
@@ -58,7 +63,7 @@ describe('AuthorizationServerService', () => {
       jest.spyOn(service as any, 'sha256').mockReturnValue('codeChallenge');
       const url = await service.generateAuthorizationUrl(clientID, scope);
       expect(url).toBe(
-        'http://localhost/account?response_type=code&client_id=9b2c99ab-f6dc-48e5-b274-fac2c45cfa83&code_challenge=codeChallenge&code_challenge_method=S256&state=state',
+        'http://localhost/account?response_type=code&client_id=9b2c99ab-f6dc-48e5-b274-fac2c45cfa83&code_challenge=codeChallenge&code_challenge_method=S256&state=state&redirect=http://localhost/authorization/token',
       );
     });
 

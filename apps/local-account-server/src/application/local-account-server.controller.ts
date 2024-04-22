@@ -33,13 +33,6 @@ export class LocalAccountServerController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    console.log(query);
-    console.log(body);
     return { ...query, code: '5555' };
-  }
-
-  @Get('/concern')
-  aprobeConcern(@Res() res: Response, @Req() req: Request) {
-    return res.end();
   }
 }

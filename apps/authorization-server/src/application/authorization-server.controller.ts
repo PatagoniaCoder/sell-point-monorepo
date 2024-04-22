@@ -1,6 +1,6 @@
-import { Controller, Get, Query, Req, Res } from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthorizationServerService } from './authorization-server.service';
-import { Request, Response } from 'express';
 
 @Controller('authorization')
 export class AuthorizationServerController {
@@ -22,12 +22,12 @@ export class AuthorizationServerController {
     @Query('code_challenge') codeChallenge: string,
     @Query('code') code: string,
   ) {
-    const token = await this.appService.exchangeCodeForToken(
+    const { token, redirectUri } = await this.appService.exchangeCodeForToken(
       state,
       clientId,
       codeChallenge,
       code,
     );
-    res.redirect('http://localhost:3000/home');
+    res.redirect(`${redirectUri}?token=${token}`);
   }
 }

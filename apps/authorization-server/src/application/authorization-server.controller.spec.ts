@@ -22,6 +22,10 @@ describe('AuthorizationServerController', () => {
           useValue: { findClientById: jest.fn().mockResolvedValue(client) },
         },
         {
+          provide: 'VERIFICATION_CODE_REPOSITORY',
+          useValue: { saveCodeVerify: jest.fn().mockResolvedValue(client) },
+        },
+        {
           provide: ConfigService,
           useValue: { get: jest.fn() },
         },

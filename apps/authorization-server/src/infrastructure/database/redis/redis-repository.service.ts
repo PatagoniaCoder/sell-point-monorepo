@@ -1,12 +1,13 @@
-import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CodeVerifyRepository } from 'apps/authorization-server/src/domain/repositories/code-verifier.repository';
-import { VCodeVerify } from 'apps/authorization-server/src/domain/value-objects/code-verify.value';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import { Redis } from 'ioredis';
+import { VerificationCodeEntity } from 'apps/authorization-server/src/domain/entities/verification-code.entity';
+import { VerificationCodeRepository } from 'apps/authorization-server/src/domain/repositories/verification-code.repository';
+import { VVerificationCode } from 'apps/authorization-server/src/domain/value-objects/verification-code.value';
 
 @Injectable()
-export class RedisRepositoryService implements CodeVerifyRepository {
+export class RedisRepositoryService implements VerificationCodeRepository {
   private expireTime: number;
   constructor(
     @InjectRedis('CODE_VERIFY_DB') private readonly redis: Redis,
@@ -17,8 +18,8 @@ export class RedisRepositoryService implements CodeVerifyRepository {
     );
   }
 
-  async saveCodeVerify(value: VCodeVerify): Promise<void> {
-    const { codeChallenge, codeVerifier, uuid, redirectUri } = value;
+  async saveCodeVerify(value: VVerificationCode): Promise<void> {
+    const { uuid } = value;
     await this.redis
       .multi()
       .set(uuid, JSON.stringify({ ...value }))
@@ -26,11 +27,17 @@ export class RedisRepositoryService implements CodeVerifyRepository {
       .exec();
   }
 
-  async findCodeVerify(uuid: string): Promise<any> {
-    return await this.redis.get(uuid);
-  }
-
-  deleteCodeVerify(uuid: string): Promise<any> {
-    throw new Error('Method not implemented.');
+  async findCodeVerify(uuid: string): Promise<VerificationCodeEntity | null> {
+    const value = await this.redis.get(uuid);
+    if (!value) return null;
+    const { codeChallenge, codeVerifier, redirectUri }: VerificationCodeEntity =
+      JSON.parse(value);
+    const codeVerifyObject = new VVerificationCode(
+      uuid,
+      codeVerifier,
+      redirectUri,
+      codeChallenge,
+    );
+    return codeVerifyObject;
   }
 }

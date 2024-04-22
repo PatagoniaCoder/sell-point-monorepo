@@ -11,8 +11,9 @@ export class MongoRepositoryService implements ClientRepository {
     @InjectModel(ClientModel.name) private clientModel: Model<ClientModel>,
   ) {}
 
-  async findClientById(uuid: string): Promise<ClientEntity> {
+  async findClientById(uuid: string): Promise<ClientEntity | null> {
     const client = await this.clientModel.findOne({ uuid });
+    if (!client) return null;
     return client;
   }
 }

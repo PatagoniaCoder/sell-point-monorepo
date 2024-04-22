@@ -10,7 +10,7 @@ export class AuthorizationServerService {
     @Inject('CLIENT_REPOSITORY')
     private readonly clientRepository: ClientRepository,
     @Inject('VERIFICATION_CODE_REPOSITORY')
-    private readonly codeVerifyRepository: VerificationCodeRepository,
+    private readonly verificationCodeRepository: VerificationCodeRepository,
     private readonly configService: ConfigService,
   ) {}
 
@@ -34,13 +34,7 @@ export class AuthorizationServerService {
       client.redirectUri,
       codeChallenge,
     );
-    await this.codeVerifyRepository.saveCodeVerify(codeVerifyObject);
-    /* save
-      {
-        codeVerifier:codeVerifier,
-        redirectUri: client.redirectUri
-      }
-     */
+    await this.verificationCodeRepository.saveCodeVerify(codeVerifyObject);
     const authorizationUrl = `${this.configService.get('LOCAL_ACCOUNT_SERVER_URL')}/account?response_type=code&client_id=${clientId}&code_challenge=${codeChallenge}&code_challenge_method=S256&state=${state}`;
     return authorizationUrl;
   }
@@ -52,7 +46,7 @@ export class AuthorizationServerService {
     code: string,
   ) {
     // restore codeVerifier
-    const value = await this.codeVerifyRepository.findCodeVerify(state);
+    const value = await this.verificationCodeRepository.findCodeVerify(state);
     return { token: '1235466548' };
   }
 

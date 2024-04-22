@@ -3,10 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClientRepository } from '../domain/repositories/client.repository';
 import { AuthorizationServerService } from './authorization-server.service';
+import { VerificationCodeRepository } from '../domain/repositories/verification-code.repository';
 
 describe('AuthorizationServerService', () => {
   let service: AuthorizationServerService;
-  let repository: ClientRepository;
+  let clientRepository: ClientRepository;
+  let verificationCodeRepository: VerificationCodeRepository;
   const client = {
     uuid: '9b2c99ab-f6dc-48e5-b274-fac2c45cfa83',
     redirectUri: 'http://localhost:3000/home',
@@ -23,16 +25,23 @@ describe('AuthorizationServerService', () => {
           useValue: { findClientById: jest.fn().mockResolvedValue(client) },
         },
         {
+          provide: 'VERIFICATION_CODE_REPOSITORY',
+          useValue: { saveCodeVerify: jest.fn().mockResolvedValue(client) },
+        },
+        {
           provide: ConfigService,
           useValue: {
-            get: jest.fn().mockReturnValue('http://localhost/account'),
+            get: jest.fn().mockReturnValue('http://localhost'),
           },
         },
       ],
     }).compile();
 
     service = app.get<AuthorizationServerService>(AuthorizationServerService);
-    repository = app.get<ClientRepository>('CLIENT_REPOSITORY');
+    clientRepository = app.get<ClientRepository>('CLIENT_REPOSITORY');
+    verificationCodeRepository = app.get<VerificationCodeRepository>(
+      'VERIFICATION_CODE_REPOSITORY',
+    );
   });
 
   describe('generateAuthorizationUrl', () => {
@@ -49,12 +58,25 @@ describe('AuthorizationServerService', () => {
       jest.spyOn(service as any, 'sha256').mockReturnValue('codeChallenge');
       const url = await service.generateAuthorizationUrl(clientID, scope);
       expect(url).toBe(
-        'http://localhost/account?response_type=code&client_id=9b2c99ab-f6dc-48e5-b274-fac2c45cfa83&redirect_uri=http://localhost:3000/home&code_challenge=codeChallenge&code_challenge_method=S256&state=state',
+        'http://localhost/account?response_type=code&client_id=9b2c99ab-f6dc-48e5-b274-fac2c45cfa83&code_challenge=codeChallenge&code_challenge_method=S256&state=state',
       );
     });
 
+    it('should save verification code', async () => {
+      jest
+        .spyOn(service as any, 'generateRandomString')
+        .mockReturnValueOnce('state');
+      jest
+        .spyOn(service as any, 'generateRandomString')
+        .mockReturnValue('codeVerifier');
+      jest.spyOn(service as any, 'sha256').mockReturnValue('codeChallenge');
+      jest.spyOn(verificationCodeRepository, 'saveCodeVerify');
+      await service.generateAuthorizationUrl(clientID, scope);
+      expect(verificationCodeRepository.saveCodeVerify).toHaveBeenCalled();
+    });
+
     it('should throw BadRequestException with message "Client does not exist"', async () => {
-      jest.spyOn(repository, 'findClientById').mockResolvedValue(null);
+      jest.spyOn(clientRepository, 'findClientById').mockResolvedValue(null);
       await service.generateAuthorizationUrl(clientID, scope).catch((err) => {
         expect(err).toBeInstanceOf(BadRequestException);
         expect(err.message).toBe('Client does not exist');
@@ -63,7 +85,7 @@ describe('AuthorizationServerService', () => {
 
     it('should throw BadRequestException with message "Scope not permitted"', async () => {
       client.scope[0] = 'all';
-      jest.spyOn(repository, 'findClientById').mockResolvedValue(client);
+      jest.spyOn(clientRepository, 'findClientById').mockResolvedValue(client);
       await service.generateAuthorizationUrl(clientID, scope).catch((err) => {
         expect(err).toBeInstanceOf(BadRequestException);
         expect(err.message).toBe('Scope not permitted');

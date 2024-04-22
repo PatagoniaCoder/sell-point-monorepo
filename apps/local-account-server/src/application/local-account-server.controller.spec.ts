@@ -18,9 +18,7 @@ describe('LocalAccountServerController', () => {
 
   describe('root', () => {
     it('should render a index page', () => {
-      expect(localAccountServerController.index(null)).toEqual({
-        message: 'Hello World!',
-      });
+      expect(localAccountServerController.index(null, null)).toEqual(undefined);
     });
   });
 });

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthorizationServerController } from './application/authorization-server.controller';
 import { AuthorizationServerService } from './application/authorization-server.service';
 import { MongoRepositoryModule } from './infrastructure/database/mongo/mongo-repository.module';
@@ -10,6 +11,14 @@ import { RedisRepositoryModule } from './infrastructure/database/redis/redis-rep
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get('JWT_SECRET'),
+        signOptions: { expiresIn: configService.get('JWT_TOKEN_EXPIRES') },
+      }),
+      inject: [ConfigService],
+    }),
     MongoRepositoryModule,
     RedisRepositoryModule,
   ],

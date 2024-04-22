@@ -1,6 +1,6 @@
-import { Controller, Get, Query, Req, Res } from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthorizationServerService } from './authorization-server.service';
-import { Request, Response } from 'express';
 
 @Controller('authorization')
 export class AuthorizationServerController {

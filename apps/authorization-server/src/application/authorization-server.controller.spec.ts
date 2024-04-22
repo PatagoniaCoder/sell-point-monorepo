@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { AuthorizationServerController } from './authorization-server.controller';
 import { AuthorizationServerService } from './authorization-server.service';
-import { ConfigService } from '@nestjs/config';
 
 describe('AuthorizationServerController', () => {
   let appController: AuthorizationServerController;
@@ -28,6 +29,10 @@ describe('AuthorizationServerController', () => {
         {
           provide: ConfigService,
           useValue: { get: jest.fn() },
+        },
+        {
+          provide: JwtService,
+          useValue: { signAsync: jest.fn() },
         },
       ],
     }).compile();

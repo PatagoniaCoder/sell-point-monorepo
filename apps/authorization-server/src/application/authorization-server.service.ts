@@ -1,6 +1,8 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ClientRepository } from '../domain/repositories/client.repository';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { getRandomValues } from 'crypto';
 import { VerificationCodeRepository } from '../domain/repositories/verification-code.repository';
 import { VVerificationCode } from '../domain/value-objects/verification-code.value';
 
@@ -12,6 +14,7 @@ export class AuthorizationServerService {
     @Inject('VERIFICATION_CODE_REPOSITORY')
     private readonly verificationCodeRepository: VerificationCodeRepository,
     private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async generateAuthorizationUrl(
@@ -53,7 +56,7 @@ export class AuthorizationServerService {
     if (!client) {
       throw new BadRequestException('Client does not exist');
     }
-    const token = JSON.stringify({ clientId, code });
+    const token = await this.jwtService.signAsync({ clientId, code });
     return { token, redirectUri: client.redirectUri };
   }
 
@@ -65,14 +68,14 @@ export class AuthorizationServerService {
     s += '';
 
     for (l = s.length; i < l; i += 2) {
-      let c = parseInt(s.substring(i, i + 1), 16);
-      let k = parseInt(s.substring(i + 1, i + 2), 16);
+      const c = parseInt(s.substring(i, i + 1), 16);
+      const k = parseInt(s.substring(i + 1, i + 2), 16);
 
-      if (isNaN(c) || isNaN(k)) return false;
+      if (isNaN(c) || isNaN(k)) continue;
       ret.push((c << 4) | k);
     }
 
-    return String.fromCharCode.apply(String, ret);
+    return String.fromCharCode(...ret);
   }
 
   private dec2hex(dec: number) {
@@ -92,7 +95,7 @@ export class AuthorizationServerService {
 
   private generateRandomString(len: number): string {
     const arr = new Uint8Array(len);
-    crypto.getRandomValues(arr);
+    getRandomValues(arr);
     const str = this.base64_urlencoded(this.dec2bin(arr));
     return str.substring(0, len);
   }
@@ -106,12 +109,12 @@ export class AuthorizationServerService {
     const maxWord = mathPow(2, 32);
     let j: number = 0;
     let result = '';
-    const words = new Array();
+    const words = [];
     let asciiBitLength: number = 0;
-    const k = new Array();
-    let hash = new Array();
+    const k = [];
+    let hash = [];
     let primeCounter = 0;
-    const isComposite = new Array();
+    const isComposite = [];
     asciiBitLength = ascii.length * 8;
     ascii += '\x80';
     while ((ascii.length % 64) - 56) ascii += '\x00';
@@ -134,23 +137,23 @@ export class AuthorizationServerService {
     words[words.length] = asciiBitLength;
 
     for (j = 0; j < words.length; ) {
-      let w = words.slice(j, (j += 16)); // The message is expanded into 64 words as part of the iteration
-      let oldHash = hash;
+      const w = words.slice(j, (j += 16)); // The message is expanded into 64 words as part of the iteration
+      const oldHash = hash;
       // is now the "working hash", often labelled as variables a...g
       // (we have to truncate as well, otherwise extra entries at the end accumulate
       hash = hash.slice(0, 8);
 
       for (let i = 0; i < 64; i++) {
-        let i2 = i + j;
+        const i2 = i + j;
         // Expand the message into 64 words
         // Used below if
-        let w15 = w[i - 15],
+        const w15 = w[i - 15],
           w2 = w[i - 2];
 
         // Iterate
-        let a = hash[0],
+        const a = hash[0],
           e = hash[4];
-        let temp1 =
+        const temp1 =
           hash[7] +
           (this.rightRotate(e, 6) ^
             this.rightRotate(e, 11) ^
@@ -171,7 +174,7 @@ export class AuthorizationServerService {
                     (w2 >>> 10))) | // s1
                 0);
         // is only used once, so *could* be moved below, but it only saves 4 bytes and makes things unreadble
-        let temp2 =
+        const temp2 =
           (this.rightRotate(a, 2) ^
             this.rightRotate(a, 13) ^
             this.rightRotate(a, 22)) + // S0
@@ -188,7 +191,7 @@ export class AuthorizationServerService {
 
     for (let i = 0; i < 8; i++) {
       for (j = 3; j + 1; j--) {
-        let b = (hash[i] >> (j * 8)) & 255;
+        const b = (hash[i] >> (j * 8)) & 255;
         result += (b < 16 ? 0 : '') + b.toString(16);
       }
     }

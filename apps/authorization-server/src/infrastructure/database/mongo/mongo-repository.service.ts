@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ClientEntity } from '../../domain/entities/client.entity';
-import { ClientRepository } from '../../domain/repositories/client.repository';
+import { ClientEntity } from '../../../domain/entities/client.entity';
+import { ClientRepository } from '../../../domain/repositories/client.repository';
 import { ClientModel } from './schema/client.schema';
 
 @Injectable()

@@ -1,33 +1,25 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AuthorizationServerController } from './application/authorization-server.controller';
 import { AuthorizationServerService } from './application/authorization-server.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
-import {
-  ClientModel,
-  ClientSchema,
-} from './infrastructure/database/schema/client.schema';
-import { MongoRepositoryService } from './infrastructure/database/mongo-repository.service';
+import { MongoRepositoryModule } from './infrastructure/database/mongo/mongo-repository.module';
+import { MongoRepositoryService } from './infrastructure/database/mongo/mongo-repository.service';
+import { RedisRepositoryService } from './infrastructure/database/redis/redis-repository.service';
+import { RedisRepositoryModule } from './infrastructure/database/redis/redis-repository.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MongooseModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get('MONGO_URI'),
-        pass: 'example',
-        user: 'root',
-        dbName: configService.get('MONGO_DB_NAME'),
-      }),
-    }),
-    MongooseModule.forFeature([
-      { name: ClientModel.name, schema: ClientSchema },
-    ]),
+    MongoRepositoryModule,
+    RedisRepositoryModule,
   ],
   controllers: [AuthorizationServerController],
   providers: [
     { provide: 'CLIENT_REPOSITORY', useClass: MongoRepositoryService },
+    {
+      provide: 'VERIFICATION_CODE_REPOSITORY',
+      useClass: RedisRepositoryService,
+    },
     AuthorizationServerService,
   ],
 })

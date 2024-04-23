@@ -15,8 +15,8 @@ describe('AuthApiController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(authApiController.getHello()).toBe('Hello World!');
+    it('login should be defined"', () => {
+      expect(authApiController.login).toBeDefined();
     });
   });
 });

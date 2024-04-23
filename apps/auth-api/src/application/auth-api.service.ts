@@ -1,34 +1,26 @@
 import {
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { UserRepository } from '../domain/repository/user.repository';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthApiService {
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'change',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+  constructor(
+    @Inject('USER_REPOSITORY') private readonly userRepository: UserRepository,
+  ) {}
 
   async validate({
     username,
     password,
   }: LoginDto): Promise<{ message: boolean }> {
-    const user = this.users.find((user) => user.username === username);
+    const user = await this.userRepository.findUserByUsername(username);
     if (!user) throw new NotFoundException('User not found');
-    const pass = await bcrypt.hash(user.password, 10); //delete on db
-    const isMatch = await bcrypt.compare(password, pass);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new UnauthorizedException();
     return { message: isMatch };
   }

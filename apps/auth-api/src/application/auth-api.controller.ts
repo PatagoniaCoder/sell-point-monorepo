@@ -8,6 +8,6 @@ export class AuthApiController {
 
   @Post('/login')
   async login(@Body() body: LoginDto) {
-    return this.authApiService.validate(body);
+    return await this.authApiService.validate(body);
   }
 }

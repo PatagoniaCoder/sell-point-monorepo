@@ -37,7 +37,11 @@ export class AuthorizationServerService {
       client.redirectUri,
     );
     await this.verificationCodeRepository.saveCodeVerify(codeVerifyObject);
-    const authorizationUrl = `${this.configService.get('LOCAL_ACCOUNT_SERVER_URL')}/account?response_type=code&client_id=${clientId}&code_challenge=${codeChallenge}&code_challenge_method=S256&state=${state}&redirect=${this.configService.get('AUTHORIZATION_SERVER_URL')}/authorization/token`;
+    const authorizationUrl = `${this.configService.get(
+      'LOCAL_ACCOUNT_SERVER_URL',
+    )}/account?response_type=code&client_id=${clientId}&code_challenge=${codeChallenge}&code_challenge_method=S256&state=${state}&redirect=${this.configService.get(
+      'AUTHORIZATION_SERVER_URL',
+    )}/authorization/token`;
     return authorizationUrl;
   }
 
@@ -48,6 +52,9 @@ export class AuthorizationServerService {
     code: string,
   ) {
     const value = await this.verificationCodeRepository.findCodeVerify(state);
+    if (!value) {
+      throw new BadRequestException('Verification Code does not exist');
+    }
     const storeCodeChallenge = this.sha256(value.codeVerifier);
     if (codeChallenge !== storeCodeChallenge) {
       throw new BadRequestException('Bad Code Challenge');
@@ -130,57 +137,50 @@ export class AuthorizationServerService {
     }
     for (let i = 0; i < ascii.length; i++) {
       j = ascii.charCodeAt(i);
-      if (j >> 8) return; // ASCII check: only accept characters in range 0-255
+      if (j >> 8) return;
       words[i >> 2] |= j << (((3 - i) % 4) * 8);
     }
     words[words.length] = (asciiBitLength / maxWord) | 0;
     words[words.length] = asciiBitLength;
 
     for (j = 0; j < words.length; ) {
-      const w = words.slice(j, (j += 16)); // The message is expanded into 64 words as part of the iteration
+      const w = words.slice(j, (j += 16));
       const oldHash = hash;
-      // is now the "working hash", often labelled as variables a...g
-      // (we have to truncate as well, otherwise extra entries at the end accumulate
+
       hash = hash.slice(0, 8);
 
       for (let i = 0; i < 64; i++) {
-        const i2 = i + j;
-        // Expand the message into 64 words
-        // Used below if
         const w15 = w[i - 15],
           w2 = w[i - 2];
 
-        // Iterate
         const a = hash[0],
           e = hash[4];
         const temp1 =
           hash[7] +
           (this.rightRotate(e, 6) ^
             this.rightRotate(e, 11) ^
-            this.rightRotate(e, 25)) + // S1
-          ((e & hash[5]) ^ (~e & hash[6])) + // ch
+            this.rightRotate(e, 25)) +
+          ((e & hash[5]) ^ (~e & hash[6])) +
           k[i] +
-          // Expand the message schedule if needed
           (w[i] =
             i < 16
               ? w[i]
               : (w[i - 16] +
                   (this.rightRotate(w15, 7) ^
                     this.rightRotate(w15, 18) ^
-                    (w15 >>> 3)) + // s0
+                    (w15 >>> 3)) +
                   w[i - 7] +
                   (this.rightRotate(w2, 17) ^
                     this.rightRotate(w2, 19) ^
-                    (w2 >>> 10))) | // s1
+                    (w2 >>> 10))) |
                 0);
-        // is only used once, so *could* be moved below, but it only saves 4 bytes and makes things unreadble
         const temp2 =
           (this.rightRotate(a, 2) ^
             this.rightRotate(a, 13) ^
-            this.rightRotate(a, 22)) + // S0
-          ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2])); // maj
+            this.rightRotate(a, 22)) +
+          ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
 
-        hash = [(temp1 + temp2) | 0].concat(hash); // We don't bother trimming off the extra ones, they're harmless as long as we're truncating when we do the slice()
+        hash = [(temp1 + temp2) | 0].concat(hash);
         hash[4] = (hash[4] + temp1) | 0;
       }
 

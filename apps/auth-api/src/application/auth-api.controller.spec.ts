@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthApiController } from './auth-api.controller';
 import { AuthApiService } from './auth-api.service';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { UserRepository } from '../domain/repository/user.repository';
 import { DummyDBService } from '../infrastructure/database/dummy-db/dummy-db.service';
 
 describe('AuthApiController', () => {
@@ -12,7 +13,7 @@ describe('AuthApiController', () => {
       controllers: [AuthApiController],
       providers: [
         AuthApiService,
-        { provide: 'USER_REPOSITORY', useClass: DummyDBService },
+        { provide: UserRepository, useClass: DummyDBService },
       ],
     }).compile();
 

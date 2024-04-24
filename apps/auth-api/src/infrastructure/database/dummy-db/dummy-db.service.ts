@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcrypt';
-import { UserEntity } from 'apps/auth-api/src/domain/entities/user.entity';
-import { UserRepository } from 'apps/auth-api/src/domain/repository/user.repository';
+import { UserEntity } from '../../../domain/entities/user.entity';
+import { UserRepository } from '../../../domain/repository/user.repository';
 
-export class DummyDBService implements UserRepository {
+export class DummyDBService extends UserRepository {
   private readonly users: {
     uuid: string;
     email: string;

@@ -3,6 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthorizationServerController } from './authorization-server.controller';
 import { AuthorizationServerService } from './authorization-server.service';
+import { ClientRepository } from '../domain/repositories/client.repository';
+import { VerificationCodeRepository } from '../domain/repositories/verification-code.repository';
 
 describe('AuthorizationServerController', () => {
   let appController: AuthorizationServerController;
@@ -19,11 +21,11 @@ describe('AuthorizationServerController', () => {
       providers: [
         AuthorizationServerService,
         {
-          provide: 'CLIENT_REPOSITORY',
+          provide: ClientRepository,
           useValue: { findClientById: jest.fn().mockResolvedValue(client) },
         },
         {
-          provide: 'VERIFICATION_CODE_REPOSITORY',
+          provide: VerificationCodeRepository,
           useValue: { saveCodeVerify: jest.fn().mockResolvedValue(client) },
         },
         {

@@ -1,5 +1,4 @@
 import {
-  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -10,9 +9,7 @@ import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthApiService {
-  constructor(
-    @Inject('USER_REPOSITORY') private readonly userRepository: UserRepository,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async validate({
     username,

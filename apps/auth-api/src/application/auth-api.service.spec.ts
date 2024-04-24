@@ -1,6 +1,7 @@
 import { TestingModule, Test } from '@nestjs/testing';
 import { AuthApiService } from './auth-api.service';
 import { UnauthorizedException } from '@nestjs/common';
+import { UserRepository } from '../domain/repository/user.repository';
 
 describe('AuthApiService', () => {
   let authApiService: AuthApiService;
@@ -28,7 +29,7 @@ describe('AuthApiService', () => {
       providers: [
         AuthApiService,
         {
-          provide: 'USER_REPOSITORY',
+          provide: UserRepository,
           useValue: {
             findUserByUsername: (value) => {
               const user = usersMock.find((user) => user.username === value);

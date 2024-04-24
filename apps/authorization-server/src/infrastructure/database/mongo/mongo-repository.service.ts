@@ -6,10 +6,12 @@ import { ClientRepository } from '../../../domain/repositories/client.repository
 import { ClientModel } from './schema/client.schema';
 
 @Injectable()
-export class MongoRepositoryService implements ClientRepository {
+export class MongoRepositoryService extends ClientRepository {
   constructor(
     @InjectModel(ClientModel.name) private clientModel: Model<ClientModel>,
-  ) {}
+  ) {
+    super();
+  }
 
   async findClientById(uuid: string): Promise<ClientEntity | null> {
     const client = await this.clientModel.findOne({ uuid });

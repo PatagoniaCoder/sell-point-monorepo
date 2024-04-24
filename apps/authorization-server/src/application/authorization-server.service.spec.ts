@@ -22,11 +22,11 @@ describe('AuthorizationServerService', () => {
       providers: [
         AuthorizationServerService,
         {
-          provide: 'CLIENT_REPOSITORY',
+          provide: ClientRepository,
           useValue: { findClientById: jest.fn().mockResolvedValue(client) },
         },
         {
-          provide: 'VERIFICATION_CODE_REPOSITORY',
+          provide: VerificationCodeRepository,
           useValue: { saveCodeVerify: jest.fn().mockResolvedValue(client) },
         },
         {
@@ -43,9 +43,9 @@ describe('AuthorizationServerService', () => {
     }).compile();
 
     service = app.get<AuthorizationServerService>(AuthorizationServerService);
-    clientRepository = app.get<ClientRepository>('CLIENT_REPOSITORY');
+    clientRepository = app.get<ClientRepository>(ClientRepository);
     verificationCodeRepository = app.get<VerificationCodeRepository>(
-      'VERIFICATION_CODE_REPOSITORY',
+      VerificationCodeRepository,
     );
   });
 

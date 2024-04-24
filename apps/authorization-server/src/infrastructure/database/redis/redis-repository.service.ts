@@ -7,12 +7,13 @@ import { VVerificationCode } from 'apps/authorization-server/src/domain/value-ob
 import { Redis } from 'ioredis';
 
 @Injectable()
-export class RedisRepositoryService implements VerificationCodeRepository {
+export class RedisRepositoryService extends VerificationCodeRepository {
   private expireTime: number;
   constructor(
     @InjectRedis('CODE_VERIFY_DB') private readonly redis: Redis,
     private readonly configService: ConfigService,
   ) {
+    super();
     this.expireTime = this.configService.get<number>(
       'REDIS_CODE_VERIFY_EXPIRATION',
     );

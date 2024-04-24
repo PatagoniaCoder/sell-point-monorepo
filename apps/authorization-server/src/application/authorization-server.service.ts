@@ -1,17 +1,15 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { ClientRepository } from '../domain/repositories/client.repository';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { getRandomValues } from 'crypto';
+import { ClientRepository } from '../domain/repositories/client.repository';
 import { VerificationCodeRepository } from '../domain/repositories/verification-code.repository';
 import { VVerificationCode } from '../domain/value-objects/verification-code.value';
 
 @Injectable()
 export class AuthorizationServerService {
   constructor(
-    @Inject('CLIENT_REPOSITORY')
     private readonly clientRepository: ClientRepository,
-    @Inject('VERIFICATION_CODE_REPOSITORY')
     private readonly verificationCodeRepository: VerificationCodeRepository,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,

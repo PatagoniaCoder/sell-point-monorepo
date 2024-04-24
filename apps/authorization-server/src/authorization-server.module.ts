@@ -7,6 +7,8 @@ import { MongoRepositoryModule } from './infrastructure/database/mongo/mongo-rep
 import { MongoRepositoryService } from './infrastructure/database/mongo/mongo-repository.service';
 import { RedisRepositoryService } from './infrastructure/database/redis/redis-repository.service';
 import { RedisRepositoryModule } from './infrastructure/database/redis/redis-repository.module';
+import { ClientRepository } from './domain/repositories/client.repository';
+import { VerificationCodeRepository } from './domain/repositories/verification-code.repository';
 
 @Module({
   imports: [
@@ -24,9 +26,9 @@ import { RedisRepositoryModule } from './infrastructure/database/redis/redis-rep
   ],
   controllers: [AuthorizationServerController],
   providers: [
-    { provide: 'CLIENT_REPOSITORY', useClass: MongoRepositoryService },
+    { provide: ClientRepository, useClass: MongoRepositoryService },
     {
-      provide: 'VERIFICATION_CODE_REPOSITORY',
+      provide: VerificationCodeRepository,
       useClass: RedisRepositoryService,
     },
     AuthorizationServerService,

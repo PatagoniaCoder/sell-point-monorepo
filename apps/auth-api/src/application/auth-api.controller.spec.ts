@@ -6,7 +6,6 @@ import { DummyDBService } from '../infrastructure/database/dummy-db/dummy-db.ser
 
 describe('AuthApiController', () => {
   let authApiController: AuthApiController;
-  let authApiService: AuthApiService;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -18,7 +17,6 @@ describe('AuthApiController', () => {
     }).compile();
 
     authApiController = app.get<AuthApiController>(AuthApiController);
-    authApiService = app.get<AuthApiService>(AuthApiService);
   });
 
   describe('root', () => {

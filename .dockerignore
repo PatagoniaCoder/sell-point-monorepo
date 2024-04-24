@@ -1,0 +1,13 @@
+# Directories
+dist
+node_modules
+mongodata
+redisdata
+
+#Files
+README.md
+.gitignore
+.git
+Dokerfile
+.env
+yarn.lock

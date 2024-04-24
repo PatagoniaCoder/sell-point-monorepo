@@ -1,0 +1,41 @@
+services:
+  auth-api:
+    container_name: dev-auth-api
+    image: dev-auth-api
+    build:
+      context: .
+      target: dev-auth-api
+    volumes:
+      - .:/usr/app
+
+  authorization-server:
+    container_name: dev-authorization-server
+    image: dev-authorization-server
+    build:
+      context: .
+      target: dev-authorization-server
+    volumes:
+      - .:/usr/app
+
+
+  #local-credentials-server:
+  #  build:
+  #    context: .
+  #    target: local-credentials-server
+  #  ports:
+  #    - '3100:3100'
+  #  environment:
+  #    LOCAL_CREDENTIALS_PORT: "3100"
+  #    JWT_EXPIRATION: "60s"
+  #    JWT_SECRET: "123"
+  #    MONGO_URI: mongodb://root:example@mongo
+  #    MONGO_DB_NAME: "sell-point"
+  #    REDIS_HOST: redis
+  #    REDIS_PORT: 6379
+  #    REDIS_AUTH_LOCAL_CREDENTIALS_INDEX: "1"
+  #    REDIS_AUTH_EXPIRATION: "60"
+  #    AUTHORIZATION_CODE: "code123"
+  #    AUTH_API_PORT: "3002/login"
+  #  depends_on:
+  #    - mongo
+  #    - redis

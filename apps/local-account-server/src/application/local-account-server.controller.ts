@@ -1,18 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Query,
-  Redirect,
-  Render,
-  Req,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Render } from '@nestjs/common';
 import { QueryDto } from './dto/index.dto';
-import { LocalAccountServerService } from './local-account-server.service';
-import { Request, Response } from 'express';
 import { LoginDto } from './dto/login.dto';
+import { LocalAccountServerService } from './local-account-server.service';
 
 @Controller('account')
 export class LocalAccountServerController {

@@ -40,6 +40,15 @@
           "**/*.css"
         ]
       }
+    },
+    "sell-point-core": {
+      "type": "application",
+      "root": "apps/sell-point-core",
+      "entryFile": "main",
+      "sourceRoot": "apps/sell-point-core/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/sell-point-core/tsconfig.app.json"
+      }
     }
   }
 }

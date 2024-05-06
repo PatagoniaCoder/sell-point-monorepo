@@ -1,1 +1,5 @@
-export interface AccountEntity {}
+export interface AccountEntity {
+  uuid: string;
+  accountNumber: string;
+  description: string;
+}

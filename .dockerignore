@@ -3,6 +3,7 @@ dist
 node_modules
 mongodata
 redisdata
+mysqldata
 
 #Files
 README.md

@@ -1,4 +1,4 @@
-import { TransactionTypeEntity } from './transaction-type.entity';
+import { TransactionTypeEntity } from './transaction-type-entity';
 
 describe('TransactionTypeEntity', () => {
   it('should be defined', () => {

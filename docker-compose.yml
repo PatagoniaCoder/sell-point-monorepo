@@ -28,28 +28,6 @@ services:
     depends_on:
       - mongo
       - redis
-
-  #local-credentials-server:
-  #  build:
-  #    context: .
-  #    target: local-credentials-server
-  #  ports:
-  #    - '3100:3100'
-  #  environment:
-  #    LOCAL_CREDENTIALS_PORT: "3100"
-  #    JWT_EXPIRATION: "60s"
-  #    JWT_SECRET: "123"
-  #    MONGO_URI: mongodb://root:example@mongo
-  #    MONGO_DB_NAME: "sell-point"
-  #    REDIS_HOST: redis
-  #    REDIS_PORT: 6379
-  #    REDIS_AUTH_LOCAL_CREDENTIALS_INDEX: "1"
-  #    REDIS_AUTH_EXPIRATION: "60"
-  #    AUTHORIZATION_CODE: "code123"
-  #    AUTH_API_PORT: "3002/login"
-  #  depends_on:
-  #    - mongo
-  #    - redis
   mongo:
     image: mongo:7.0.9-rc1
     ports:
@@ -65,3 +43,13 @@ services:
       - '6379:6379'
     volumes:
       - './redisdata:/data'
+  mysql:
+    image: mysql:lts
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysqldata:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1928374650
+      MYSQL_DATABASE: sell-point
+

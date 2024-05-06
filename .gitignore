@@ -61,3 +61,4 @@ yarn.lock
 # Databases
 mongodata
 redisdata
+mysqldata

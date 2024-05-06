@@ -17,15 +17,10 @@ import { join } from 'path';
         host: configService.get('MYSQL_HOST'),
         port: configService.get('MYSQL_PORT'),
         database: configService.get('MYSQL_DATABASE_NAME'),
-        entities: [
-          join(
-            __dirname,
-            '/**/infrastructure/database/mysql/entity/*-entity.js',
-          ),
-        ],
-        migrations: [
-          join(__dirname, '/**/infrastructure/database/mysql/migrations/*.js'),
-        ],
+        entities: [join(__dirname, '/**/infrastructure/database/mysql/entity/*-entity.js')],
+        migrations: [join(__dirname, '/**/infrastructure/database/mysql/migrations/*.js')],
+        username: configService.get('MYSQL_USERNAME'),
+        password: configService.get('MYSQL_PASSWORD'),
       }),
     }),
     AccountModule,

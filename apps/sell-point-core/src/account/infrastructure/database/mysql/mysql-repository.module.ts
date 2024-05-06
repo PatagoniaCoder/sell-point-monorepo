@@ -6,5 +6,6 @@ import { AccountEntity } from './entity/account-entity';
 @Module({
   imports: [TypeOrmModule.forFeature([AccountEntity])],
   providers: [MysqlService],
+  exports: [MysqlService, TypeOrmModule],
 })
 export class MysqlRepositoryModule {}

@@ -1,11 +1,9 @@
-import { Filters as li } from './filters';
-
 enum EOrder {
   ASC = 'asc',
   DESC = 'desc',
   NONE = 'none',
 }
-export class Criteria2<T> {
+/* export class Criteria2<T> {
   readonly filters: li<T>;
   readonly order: EOrder;
   readonly limit?: number;
@@ -17,7 +15,7 @@ export class Criteria2<T> {
     this.limit = limit;
     this.offset = offset;
   }
-}
+} */
 //Folder Criteria
 
 //Folder ValueObject

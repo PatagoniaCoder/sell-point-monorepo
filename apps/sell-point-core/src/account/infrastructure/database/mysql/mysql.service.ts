@@ -23,7 +23,7 @@ export class MysqlService extends MySqlCriteriaConverter implements AccountRepos
     return await this.mysqlRepository.find({ take: 20 });
   }
 
-  async FindByCriteria(queryParams: Criteria): Promise<AccountEntity[]> {
+  async findByCriteria(queryParams: Criteria): Promise<AccountEntity[]> {
     const fil = this.convert(queryParams);
 
     return await this.mysqlRepository.find({

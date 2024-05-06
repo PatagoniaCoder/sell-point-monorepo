@@ -4,6 +4,6 @@ import { TransactionTypeService } from './application/transaction-type.service';
 
 @Module({
   controllers: [TransactionTypeController],
-  providers: [TransactionTypeService]
+  providers: [TransactionTypeService],
 })
 export class TransactionTypeModule {}

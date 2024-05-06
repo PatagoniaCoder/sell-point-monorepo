@@ -15,9 +15,7 @@ export class LocalAccountServerService {
     const userValid = await firstValueFrom(
       this.httpService
         .post('/login', body)
-        .pipe(
-          map(({ status }) => (status === HttpStatus.CREATED ? true : false)),
-        ),
+        .pipe(map(({ status }) => (status === HttpStatus.CREATED ? true : false))),
     );
     if (!userValid) {
       throw new ForbiddenException('User or pass not valid');

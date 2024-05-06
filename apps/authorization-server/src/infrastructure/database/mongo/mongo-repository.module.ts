@@ -15,9 +15,7 @@ import { MongoRepositoryService } from './mongo-repository.service';
         dbName: configService.get('MONGO_DB_NAME'),
       }),
     }),
-    MongooseModule.forFeature([
-      { name: ClientModel.name, schema: ClientSchema },
-    ]),
+    MongooseModule.forFeature([{ name: ClientModel.name, schema: ClientSchema }]),
   ],
   providers: [MongoRepositoryService],
   exports: [MongoRepositoryService, MongooseModule],

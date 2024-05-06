@@ -8,9 +8,6 @@ import { UserRepository } from './domain/repository/user.repository';
 @Module({
   imports: [DummyDBModule],
   controllers: [AuthApiController],
-  providers: [
-    AuthApiService,
-    { provide: UserRepository, useClass: DummyDBService },
-  ],
+  providers: [AuthApiService, { provide: UserRepository, useClass: DummyDBService }],
 })
 export class AuthApiModule {}

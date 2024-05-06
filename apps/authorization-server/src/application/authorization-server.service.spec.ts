@@ -54,12 +54,8 @@ describe('AuthorizationServerService', () => {
     const scope = client.scope[0];
 
     it('should return the authorization Url', async () => {
-      jest
-        .spyOn(service as any, 'generateRandomString')
-        .mockReturnValueOnce('state');
-      jest
-        .spyOn(service as any, 'generateRandomString')
-        .mockReturnValue('codeVerifier');
+      jest.spyOn(service as any, 'generateRandomString').mockReturnValueOnce('state');
+      jest.spyOn(service as any, 'generateRandomString').mockReturnValue('codeVerifier');
       jest.spyOn(service as any, 'sha256').mockReturnValue('codeChallenge');
       const url = await service.generateAuthorizationUrl(clientID, scope);
       expect(url).toBe(
@@ -68,12 +64,8 @@ describe('AuthorizationServerService', () => {
     });
 
     it('should save verification code', async () => {
-      jest
-        .spyOn(service as any, 'generateRandomString')
-        .mockReturnValueOnce('state');
-      jest
-        .spyOn(service as any, 'generateRandomString')
-        .mockReturnValue('codeVerifier');
+      jest.spyOn(service as any, 'generateRandomString').mockReturnValueOnce('state');
+      jest.spyOn(service as any, 'generateRandomString').mockReturnValue('codeVerifier');
       jest.spyOn(service as any, 'sha256').mockReturnValue('codeChallenge');
       jest.spyOn(verificationCodeRepository, 'saveCodeVerify');
       await service.generateAuthorizationUrl(clientID, scope);

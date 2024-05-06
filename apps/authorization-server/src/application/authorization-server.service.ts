@@ -15,10 +15,7 @@ export class AuthorizationServerService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async generateAuthorizationUrl(
-    clientId: string,
-    scope: string,
-  ): Promise<string> {
+  async generateAuthorizationUrl(clientId: string, scope: string): Promise<string> {
     const client = await this.clientRepository.findClientById(clientId);
     if (!client) {
       throw new BadRequestException('Client does not exist');
@@ -29,11 +26,7 @@ export class AuthorizationServerService {
     const state = this.generateRandomString(5);
     const codeVerifier = this.generateRandomString(12);
     const codeChallenge = this.sha256(codeVerifier);
-    const codeVerifyObject = new VVerificationCode(
-      state,
-      codeVerifier,
-      client.redirectUri,
-    );
+    const codeVerifyObject = new VVerificationCode(state, codeVerifier, client.redirectUri);
     await this.verificationCodeRepository.saveCodeVerify(codeVerifyObject);
     const authorizationUrl = `${this.configService.get(
       'LOCAL_ACCOUNT_SERVER_URL',
@@ -92,10 +85,7 @@ export class AuthorizationServerService {
   }
 
   private base64_urlencoded(str: string | boolean) {
-    return btoa(str.toString())
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=/g, '');
+    return btoa(str.toString()).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
   }
 
   private generateRandomString(len: number): string {
@@ -155,27 +145,19 @@ export class AuthorizationServerService {
           e = hash[4];
         const temp1 =
           hash[7] +
-          (this.rightRotate(e, 6) ^
-            this.rightRotate(e, 11) ^
-            this.rightRotate(e, 25)) +
+          (this.rightRotate(e, 6) ^ this.rightRotate(e, 11) ^ this.rightRotate(e, 25)) +
           ((e & hash[5]) ^ (~e & hash[6])) +
           k[i] +
           (w[i] =
             i < 16
               ? w[i]
               : (w[i - 16] +
-                  (this.rightRotate(w15, 7) ^
-                    this.rightRotate(w15, 18) ^
-                    (w15 >>> 3)) +
+                  (this.rightRotate(w15, 7) ^ this.rightRotate(w15, 18) ^ (w15 >>> 3)) +
                   w[i - 7] +
-                  (this.rightRotate(w2, 17) ^
-                    this.rightRotate(w2, 19) ^
-                    (w2 >>> 10))) |
+                  (this.rightRotate(w2, 17) ^ this.rightRotate(w2, 19) ^ (w2 >>> 10))) |
                 0);
         const temp2 =
-          (this.rightRotate(a, 2) ^
-            this.rightRotate(a, 13) ^
-            this.rightRotate(a, 22)) +
+          (this.rightRotate(a, 2) ^ this.rightRotate(a, 13) ^ this.rightRotate(a, 22)) +
           ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
 
         hash = [(temp1 + temp2) | 0].concat(hash);

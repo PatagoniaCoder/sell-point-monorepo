@@ -11,10 +11,7 @@ export class CryptographyService {
   }
 
   private base64_urlencoded(str: string | boolean) {
-    return btoa(str.toString())
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=/g, '');
+    return btoa(str.toString()).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
   }
 
   private dec2bin(arr: Uint8Array) {

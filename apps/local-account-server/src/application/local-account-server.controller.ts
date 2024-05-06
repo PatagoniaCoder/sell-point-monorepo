@@ -5,9 +5,7 @@ import { LocalAccountServerService } from './local-account-server.service';
 
 @Controller('account')
 export class LocalAccountServerController {
-  constructor(
-    private readonly localAccountServerService: LocalAccountServerService,
-  ) {}
+  constructor(private readonly localAccountServerService: LocalAccountServerService) {}
 
   @Get()
   @Render('index')

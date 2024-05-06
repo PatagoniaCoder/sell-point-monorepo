@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../domain/repository/user.repository';
 import { LoginDto } from './dto/login.dto';
@@ -11,10 +7,7 @@ import { LoginDto } from './dto/login.dto';
 export class AuthApiService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async validate({
-    username,
-    password,
-  }: LoginDto): Promise<{ message: boolean }> {
+  async validate({ username, password }: LoginDto): Promise<{ message: boolean }> {
     const user = await this.userRepository.findUserByUsername(username);
     if (!user) throw new NotFoundException('User not found');
     const isMatch = await bcrypt.compare(password, user.password);

@@ -1,10 +1,17 @@
-import { AccountValue } from '../value-object/account.value';
+import { Filter } from './filter';
 
-export abstract class Filters2<T> {
-  readonly filters: Partial<T>;
-  constructor(filters: Partial<T>) {
+export class Filters {
+  public readonly filters: Filter[];
+
+  constructor(filters: Filter[]) {
     this.filters = filters;
   }
 
-  abstract none(): null;
+  public static fromValues(filters: Array<Map<string, string>>): Filters {
+    return new Filters(filters.map(Filter.fromValues));
+  }
+
+  public static none(): Filters {
+    return new Filters([]);
+  }
 }

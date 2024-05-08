@@ -6,7 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(SellPointCoreModule);
-  const port = app.get(ConfigService).get('SELL_CORE_PORT');
+  const port = Number(app.get(ConfigService).get('SELL_CORE_PORT'));
   const logger = new Logger('SellPointCore');
   app.enableCors();
 

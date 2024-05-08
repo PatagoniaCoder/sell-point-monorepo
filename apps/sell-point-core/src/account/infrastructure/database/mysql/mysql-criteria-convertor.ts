@@ -6,7 +6,7 @@ import {
   Operator,
   Order,
   OrderTypes,
-} from '../../../domain/criteria/criteria';
+} from '../../../domain/criteria';
 
 interface TransformerFunction<T, K> {
   (value: T): K;

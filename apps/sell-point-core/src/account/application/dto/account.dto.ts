@@ -1,20 +1,18 @@
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
-import { OrderTypes } from '../../domain/criteria/criteria';
+import { Operator, OrderTypes } from '../../domain/criteria';
 
 class StringValueObjectDto {
   @IsString()
-  _value: string;
-}
-
-class OrderTypesDto {
-  @IsEnum(OrderTypes)
-  _value: OrderTypes;
+  value: string;
 }
 
 class FilterFieldDto extends StringValueObjectDto {}
 
-class FilterOperatorDto extends StringValueObjectDto {}
+class FilterOperatorDto {
+  @IsEnum(Operator)
+  value: Operator;
+}
 
 class FilterValueDto extends StringValueObjectDto {}
 
@@ -28,8 +26,17 @@ class FilterDto {
   @Type(() => FilterValueDto)
   value: FilterValueDto;
 }
+class FiltersDto {
+  @Type(() => FilterDto)
+  filters: FilterDto[];
+}
 
 class OrderByDto extends StringValueObjectDto {}
+
+class OrderTypesDto {
+  @IsEnum(OrderTypes)
+  value: OrderTypes;
+}
 
 class OrderDto {
   @Type(() => OrderByDto)
@@ -41,8 +48,8 @@ class OrderDto {
 
 export class AccountDto {
   @ValidateNested({ each: true })
-  @Type(() => FilterDto)
-  filters: FilterDto[];
+  @Type(() => FiltersDto)
+  filters: FiltersDto;
 
   @Type(() => OrderDto)
   order: OrderDto;

@@ -16,6 +16,7 @@ export class MysqlService extends MySqlCriteriaConverter implements AccountRepos
   }
 
   async createAccount(value: AccountEntity): Promise<AccountEntity> {
+    value;
     throw new Error('Method not implemented.');
   }
 
@@ -24,21 +25,23 @@ export class MysqlService extends MySqlCriteriaConverter implements AccountRepos
   }
 
   async findByCriteria(queryParams: Criteria): Promise<AccountEntity[]> {
-    const fil = this.convert(queryParams);
-
+    const { filter, order, limit, skip } = this.convert(queryParams);
     return await this.mysqlRepository.find({
-      where: fil.filter.where,
-      order: fil.order,
-      take: fil.limit,
-      skip: fil.skip,
+      where: filter.where,
+      order: order,
+      take: limit,
+      skip: skip,
     });
   }
 
   async deleteAccount(uuid: string): Promise<void> {
+    uuid;
     throw new Error('Method not implemented.');
   }
 
   async updateAccount(uuid: string, value: Partial<AccountEntity>): Promise<AccountEntity> {
+    uuid;
+    value;
     throw new Error('Method not implemented.');
   }
 }

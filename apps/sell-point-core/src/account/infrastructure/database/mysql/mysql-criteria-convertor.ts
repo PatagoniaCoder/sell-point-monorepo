@@ -1,4 +1,4 @@
-import { ArrayContains, Equal, FindOperator, LessThan, MoreThan, Not } from 'typeorm';
+import { Equal, FindOperator, LessThan, Like, MoreThan, Not } from 'typeorm';
 import {
   Criteria,
   Filter,
@@ -82,10 +82,12 @@ export class MySqlCriteriaConverter {
   }
 
   private containsFilter(filter: Filter): MySqlFilter {
-    return { where: { [filter.field.value()]: ArrayContains([filter.value.value()]) } };
+    return {
+      where: { [filter.field.value()]: Like(`%${filter.value.value()}%`) },
+    };
   }
 
   private notContainsFilter(filter: Filter): MySqlFilter {
-    return { where: { [filter.field.value()]: Not(ArrayContains([filter.value.value()])) } };
+    return { where: { [filter.field.value()]: Not(Like(`%${filter.value.value()}%`)) } };
   }
 }

@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsEnum, IsNumber, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { Operator, OrderTypes } from '../../domain/criteria';
+import { AccountEntity } from '../../domain/entity/account.entity.interface';
 
 class StringValueObjectDto {
   @IsString()
@@ -46,7 +47,7 @@ class OrderDto {
   orderType: OrderTypesDto;
 }
 
-export class AccountDto {
+export class FilterAccountDto {
   @ValidateNested({ each: true })
   @Type(() => FiltersDto)
   filters: FiltersDto;
@@ -59,4 +60,13 @@ export class AccountDto {
 
   @IsNumber()
   offset?: number;
+}
+
+export class AccountResponseDto implements AccountEntity {
+  @IsUUID()
+  uuid: string;
+  @IsString()
+  accountNumber: string;
+  @IsString()
+  description: string;
 }

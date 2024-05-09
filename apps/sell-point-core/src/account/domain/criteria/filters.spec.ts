@@ -19,10 +19,10 @@ describe('Filters', () => {
       ['operator', '='],
       ['value', 'string'],
     ]);
-    const some = Filters.fromValues([map]);
+    const filters = Filters.fromValues([map]);
 
-    expect(some.filters.length).toBe(1);
-    some.filters.map((filter) => {
+    expect(filters.filters.length).toBe(1);
+    filters.filters.map((filter) => {
       expect(filter.field.value()).toBe('uuid');
       expect(filter.operator.value).toBe('=');
       expect(filter.value.value()).toBe('string');

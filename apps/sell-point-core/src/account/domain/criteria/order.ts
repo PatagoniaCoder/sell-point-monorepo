@@ -1,4 +1,4 @@
-import { OrderTypes } from './enum-order-types';
+import { EOrderTypes } from './enum-order-types';
 import { OrderBy } from './order-by';
 import { OrderType } from './order-type';
 
@@ -13,10 +13,10 @@ export class Order {
 
   public static fromValues(orderBy?: string, orderType?: string): Order {
     if (!orderBy) {
-      return new Order(new OrderBy(''), new OrderType(OrderTypes.NONE));
+      return new Order(new OrderBy(''), new OrderType(EOrderTypes.NONE));
     }
 
-    return new Order(new OrderBy(orderBy), OrderType.fromValue(orderType || OrderTypes.ASC));
+    return new Order(new OrderBy(orderBy), OrderType.fromValue(orderType || EOrderTypes.ASC));
   }
 
   public hasOrder() {

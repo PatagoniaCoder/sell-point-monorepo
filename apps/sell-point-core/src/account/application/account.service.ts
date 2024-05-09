@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Criteria, Filters, Order } from '../domain/criteria';
 import { AccountRepository } from '../domain/repository/account.repository.interface';
 import { FilterAccountDto } from './dto/account.dto';
+import { EFilter } from '../domain/criteria/enum-filter';
 
 @Injectable()
 export class AccountService {
@@ -12,9 +13,9 @@ export class AccountService {
     const mapFilters = filters.filters.map(
       (filter) =>
         new Map([
-          ['field', filter.field.value],
-          ['operator', filter.operator.value],
-          ['value', filter.value.value],
+          [EFilter.FIELD, filter.field.value],
+          [EFilter.OPERATOR, filter.operator.value],
+          [EFilter.VALUE, filter.value.value],
         ]),
     );
     const criteria = new Criteria(

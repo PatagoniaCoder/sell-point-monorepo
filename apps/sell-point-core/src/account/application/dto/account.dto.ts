@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsString, IsUUID, ValidateNested } from 'class-validator';
-import { Operator, OrderTypes } from '../../domain/criteria';
+import { EOperator, EOrderTypes } from '../../domain/criteria';
 import { AccountEntity } from '../../domain/entity/account.entity.interface';
 
 class StringValueObjectDto {
@@ -11,8 +11,8 @@ class StringValueObjectDto {
 class FilterFieldDto extends StringValueObjectDto {}
 
 class FilterOperatorDto {
-  @IsEnum(Operator)
-  value: Operator;
+  @IsEnum(EOperator)
+  value: EOperator;
 }
 
 class FilterValueDto extends StringValueObjectDto {}
@@ -35,8 +35,8 @@ class FiltersDto {
 class OrderByDto extends StringValueObjectDto {}
 
 class OrderTypesDto {
-  @IsEnum(OrderTypes)
-  value: OrderTypes;
+  @IsEnum(EOrderTypes)
+  value: EOrderTypes;
 }
 
 class OrderDto {

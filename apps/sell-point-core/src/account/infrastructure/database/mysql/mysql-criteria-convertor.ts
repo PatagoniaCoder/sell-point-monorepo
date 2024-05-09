@@ -3,9 +3,9 @@ import {
   Criteria,
   Filter,
   Filters,
-  Operator,
+  EOperator,
   Order,
-  OrderTypes,
+  EOrderTypes,
 } from '../../../domain/criteria';
 
 interface TransformerFunction<T, K> {
@@ -15,7 +15,7 @@ interface TransformerFunction<T, K> {
 type MySqlFilter = {
   where: { [field: string]: FindOperator<string> | FindOperator<string>[] };
 };
-type MySqlSort = { [field: string]: OrderTypes };
+type MySqlSort = { [field: string]: EOrderTypes };
 interface MySqlQuery {
   filter: MySqlFilter;
   order: MySqlSort;
@@ -23,16 +23,16 @@ interface MySqlQuery {
   limit: number;
 }
 export class MySqlCriteriaConverter {
-  private filterTransformers: Map<Operator, TransformerFunction<Filter, MySqlFilter>>;
+  private filterTransformers: Map<EOperator, TransformerFunction<Filter, MySqlFilter>>;
 
   constructor() {
-    this.filterTransformers = new Map<Operator, TransformerFunction<Filter, MySqlFilter>>([
-      [Operator.EQUAL, this.equalFilter],
-      [Operator.NOT_EQUAL, this.notEqualFilter],
-      [Operator.GT, this.greaterThanFilter],
-      [Operator.LT, this.lowerThanFilter],
-      [Operator.CONTAINS, this.containsFilter],
-      [Operator.NOT_CONTAINS, this.notContainsFilter],
+    this.filterTransformers = new Map<EOperator, TransformerFunction<Filter, MySqlFilter>>([
+      [EOperator.EQUAL, this.equalFilter],
+      [EOperator.NOT_EQUAL, this.notEqualFilter],
+      [EOperator.GT, this.greaterThanFilter],
+      [EOperator.LT, this.lowerThanFilter],
+      [EOperator.CONTAINS, this.containsFilter],
+      [EOperator.NOT_CONTAINS, this.notContainsFilter],
     ]);
   }
 
@@ -61,7 +61,7 @@ export class MySqlCriteriaConverter {
 
   protected generateSort(order: Order): MySqlSort {
     return {
-      [order.orderBy.value()]: order.orderType.isAsc() ? OrderTypes.ASC : OrderTypes.DESC,
+      [order.orderBy.value()]: order.orderType.isAsc() ? EOrderTypes.ASC : EOrderTypes.DESC,
     };
   }
 

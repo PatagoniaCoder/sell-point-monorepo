@@ -1,4 +1,4 @@
-export enum Operator {
+export enum EOperator {
   EQUAL = '=',
   NOT_EQUAL = '!=',
   GT = '>',

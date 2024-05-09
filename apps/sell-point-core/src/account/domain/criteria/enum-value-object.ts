@@ -1,4 +1,4 @@
-export abstract class EnumValueObject<T> {
+export abstract class EValueObject<T> {
   readonly value: T;
 
   constructor(

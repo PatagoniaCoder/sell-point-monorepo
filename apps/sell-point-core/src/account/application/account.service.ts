@@ -8,6 +8,7 @@ import { EFilter } from '../domain/criteria/enum-filter';
 @Injectable()
 export class AccountService {
   constructor(private readonly accountRepository: AccountRepository) {}
+
   async find(filterAccount: FilterAccountDto) {
     const { filters, order, offset, limit } = filterAccount;
     const mapFilters = filters.filters.map(

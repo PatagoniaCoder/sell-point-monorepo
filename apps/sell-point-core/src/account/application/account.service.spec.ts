@@ -31,7 +31,7 @@ describe('AccountService', () => {
       limit: 0,
       offset: 0,
     };
-    await service.find(dto);
+    await service.findByCriteria(dto);
     expect(repository.findByCriteria).toHaveBeenCalled();
   });
 });

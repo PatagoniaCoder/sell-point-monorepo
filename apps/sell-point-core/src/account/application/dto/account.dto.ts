@@ -1,3 +1,4 @@
+import { OmitType, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { EOperator, EOrderTypes } from '../../domain/criteria';
@@ -70,3 +71,6 @@ export class AccountResponseDto implements AccountEntity {
   @IsString()
   description: string;
 }
+
+export class AccountDto extends OmitType(AccountResponseDto, ['uuid'] as const) {}
+export class AccountUpdateDto extends PartialType(AccountResponseDto) {}

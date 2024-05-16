@@ -9,8 +9,6 @@ async function bootstrap() {
   const logger = new Logger('LocalCredentialsServer');
   app.enableCors();
 
-  await app
-    .listen(port)
-    .then(() => logger.log(`AUTHORIZATION SERVER run on port ${port}`));
+  await app.listen(port).then(() => logger.log(`AUTHORIZATION SERVER run on port ${port}`));
 }
 bootstrap();

@@ -21,17 +21,13 @@ describe('LocalAccountServerController (e2e)', () => {
 
   it('/ (GET)', () => {
     let htmlFile = '';
-    readFile(
-      join(__dirname, '../src/views/index.hbs'),
-      'utf-8',
-      (err, data) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        htmlFile = data;
-      },
-    );
+    readFile(join(__dirname, '../src/views/index.hbs'), 'utf-8', (err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      htmlFile = data;
+    });
     return request(app.getHttpServer())
       .get('/')
       .query({ state: '132', clientID: '123', redirectUri: 'redi' })

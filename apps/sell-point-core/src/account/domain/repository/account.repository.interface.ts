@@ -1,10 +1,11 @@
 import { AccountEntity } from '../../infrastructure/database/mysql/entity/account-entity';
 import { Criteria } from '../criteria/criteria';
+import { AccountValue } from '../value-object/account.value';
 
-export interface AccountRepository {
-  createAccount(value: AccountEntity): Promise<AccountEntity>;
-  findAllAccounts(): Promise<AccountEntity[]>;
-  FindByCriteria(queryParams: Criteria): Promise<AccountEntity[]>;
-  deleteAccount(uuid: string): Promise<void>;
-  updateAccount(uuid: string, value: Partial<AccountEntity>): Promise<AccountEntity>;
+export abstract class AccountRepository {
+  abstract createAccount(value: AccountValue): Promise<AccountEntity>;
+  abstract findAllAccounts(): Promise<AccountEntity[]>;
+  abstract findByCriteria(queryParams: Criteria): Promise<AccountEntity[]>;
+  abstract deleteAccount(uuid: string): Promise<void>;
+  abstract updateAccount(uuid: string, value: Partial<AccountValue>): Promise<AccountEntity>;
 }

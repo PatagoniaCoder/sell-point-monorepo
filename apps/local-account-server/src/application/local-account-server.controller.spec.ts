@@ -24,9 +24,7 @@ describe('LocalAccountServerController', () => {
     localAccountServerController = app.get<LocalAccountServerController>(
       LocalAccountServerController,
     );
-    localAccountServerService = app.get<LocalAccountServerService>(
-      LocalAccountServerService,
-    );
+    localAccountServerService = app.get<LocalAccountServerService>(LocalAccountServerService);
   });
 
   describe('root', () => {

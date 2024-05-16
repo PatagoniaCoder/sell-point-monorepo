@@ -16,11 +16,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@sell-point-core/shared/*": [
-        "apps/sell-point-core/src/shared/*"
-      ]
-    }
+    "noFallthroughCasesInSwitch": false
   }
 }

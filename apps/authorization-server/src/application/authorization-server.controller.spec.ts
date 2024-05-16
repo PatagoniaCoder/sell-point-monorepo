@@ -39,9 +39,7 @@ describe('AuthorizationServerController', () => {
       ],
     }).compile();
 
-    appController = app.get<AuthorizationServerController>(
-      AuthorizationServerController,
-    );
+    appController = app.get<AuthorizationServerController>(AuthorizationServerController);
   });
 
   describe('root', () => {

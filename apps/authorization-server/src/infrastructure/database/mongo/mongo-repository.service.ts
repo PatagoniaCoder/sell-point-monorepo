@@ -7,9 +7,7 @@ import { ClientModel } from './schema/client.schema';
 
 @Injectable()
 export class MongoRepositoryService extends ClientRepository {
-  constructor(
-    @InjectModel(ClientModel.name) private clientModel: Model<ClientModel>,
-  ) {
+  constructor(@InjectModel(ClientModel.name) private clientModel: Model<ClientModel>) {
     super();
   }
 

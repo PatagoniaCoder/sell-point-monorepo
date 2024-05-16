@@ -14,9 +14,7 @@ export class RedisRepositoryService extends VerificationCodeRepository {
     private readonly configService: ConfigService,
   ) {
     super();
-    this.expireTime = this.configService.get<number>(
-      'REDIS_CODE_VERIFY_EXPIRATION',
-    );
+    this.expireTime = this.configService.get<number>('REDIS_CODE_VERIFY_EXPIRATION');
   }
 
   async saveCodeVerify(value: VVerificationCode): Promise<void> {
@@ -31,13 +29,8 @@ export class RedisRepositoryService extends VerificationCodeRepository {
   async findCodeVerify(uuid: string): Promise<VerificationCodeEntity | null> {
     const value = await this.redis.get(uuid);
     if (!value) return null;
-    const { codeVerifier, redirectUri }: VerificationCodeEntity =
-      JSON.parse(value);
-    const codeVerifyObject = new VVerificationCode(
-      uuid,
-      codeVerifier,
-      redirectUri,
-    );
+    const { codeVerifier, redirectUri }: VerificationCodeEntity = JSON.parse(value);
+    const codeVerifyObject = new VVerificationCode(uuid, codeVerifier, redirectUri);
     return codeVerifyObject;
   }
 }

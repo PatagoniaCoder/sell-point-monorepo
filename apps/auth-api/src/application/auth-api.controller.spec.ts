@@ -11,10 +11,7 @@ describe('AuthApiController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AuthApiController],
-      providers: [
-        AuthApiService,
-        { provide: UserRepository, useClass: DummyDBService },
-      ],
+      providers: [AuthApiService, { provide: UserRepository, useClass: DummyDBService }],
     }).compile();
 
     authApiController = app.get<AuthApiController>(AuthApiController);

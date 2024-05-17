@@ -6,6 +6,7 @@ import { BalanceModule } from './balance/balance.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { TransactionTypeModule } from './transaction-type/transaction-type.module';
 import { AccountEntity } from './account/infrastructure/database/mysql/entity/account-entity';
+import { TransactionTypeEntity } from './transaction-type/infrastructure/database/mysql/entity/transaction-type-entity';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { AccountEntity } from './account/infrastructure/database/mysql/entity/ac
         host: configService.get('MYSQL_HOST'),
         port: Number(configService.get('MYSQL_PORT')),
         database: configService.get('MYSQL_DATABASE_NAME'),
-        entities: [AccountEntity],
+        entities: [AccountEntity, TransactionTypeEntity],
         username: configService.get('MYSQL_USERNAME'),
         password: configService.get('MYSQL_PASSWORD'),
       }),

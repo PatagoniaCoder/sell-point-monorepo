@@ -63,7 +63,7 @@ export class FilterAccountDto {
   offset?: number;
 }
 
-export class AccountResponseDto implements AccountEntity {
+export class AccountResponseDto extends AccountEntity {
   @IsUUID()
   uuid: string;
   @IsString()

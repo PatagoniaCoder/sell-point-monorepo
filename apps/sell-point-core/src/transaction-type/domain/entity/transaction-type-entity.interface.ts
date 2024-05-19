@@ -1,4 +1,4 @@
-export interface TransactionTypeEntity {
+export abstract class TransactionTypeEntity {
   uuid: string;
   description: string;
   action: string;

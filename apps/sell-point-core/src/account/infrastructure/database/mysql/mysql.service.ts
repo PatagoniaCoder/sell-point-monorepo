@@ -35,6 +35,10 @@ export class MysqlService extends MySqlCriteriaConverter implements AccountRepos
     });
   }
 
+  async findByUuid(uuid: string): Promise<AccountEntity> {
+    return await this.mysqlRepository.findOne({ where: { uuid } });
+  }
+
   async deleteAccount(uuid: string): Promise<void> {
     const entity = await this.mysqlRepository
       .findOneOrFail({

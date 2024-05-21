@@ -8,18 +8,33 @@ import {
 } from './dto/transaction.dto';
 import { EFilter } from '../domain/criteria/enum-filter';
 import { TransactionValue } from '../domain/value-object/transaction-value';
+import { TransactionTypeRepository } from '../../transaction-type/domain/repository/transaction-type-repository.interface';
+import { AccountRepository } from '../../account/domain/repository/account.repository.interface';
+import { TransactionEntity } from '../domain/entity/transaction-entity.interface';
 
 @Injectable()
 export class TransactionService {
-  constructor(private readonly transactionRepository: TransactionRepository) {}
+  constructor(
+    private readonly transactionRepository: TransactionRepository,
+    private readonly transactionTypeRepository: TransactionTypeRepository,
+    private readonly accountRepository: AccountRepository,
+  ) {}
 
-  async createTransaction(transaction: TransactionDto): Promise<TransactionDto> {
+  async createTransaction(transaction: TransactionDto): Promise<TransactionEntity> {
     const {
-      transactionType,
-      transactionAccountFrom,
-      transactionAccountTo,
+      transactionTypeUuid,
+      transactionAccountFromUuid,
+      transactionAccountToUuid,
       transactionAmount,
     } = transaction;
+    const transactionType =
+      await this.transactionTypeRepository.findByUuid(transactionTypeUuid);
+    const transactionAccountFrom = await this.accountRepository.findByUuid(
+      transactionAccountFromUuid,
+    );
+    const transactionAccountTo = await this.accountRepository.findByUuid(
+      transactionAccountToUuid,
+    );
     const newTransaction = new TransactionValue(
       transactionType,
       transactionAccountFrom,
@@ -38,7 +53,7 @@ export class TransactionService {
   async updateTransaction(
     uuid: string,
     values: TransactionUpdateDto,
-  ): Promise<TransactionDto> {
+  ): Promise<TransactionEntity> {
     return await this.transactionRepository.updateTransaction(uuid, values);
   }
 
@@ -62,7 +77,7 @@ export class TransactionService {
     return await this.transactionRepository.findByCriteria(criteria);
   }
 
-  async findAll(): Promise<TransactionDto[]> {
+  async findAll(): Promise<TransactionEntity[]> {
     return await this.transactionRepository.findAllTransactions();
   }
 }

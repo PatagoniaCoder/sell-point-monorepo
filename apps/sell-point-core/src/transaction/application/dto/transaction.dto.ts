@@ -1,8 +1,8 @@
-import { OmitType, PartialType } from '@nestjs/swagger';
-import { AccountResponseDto } from '../../../account/application/dto/account.dto';
-import { TransactionTypeResponseDto } from '../../../transaction-type/application/dto/transaction-type.dto';
+import { PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsNumber, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { AccountResponseDto } from '../../../account/application/dto/account.dto';
+import { TransactionTypeResponseDto } from '../../../transaction-type/application/dto/transaction-type.dto';
 import { EOperator, EOrderTypes } from '../../domain/criteria';
 import { TransactionEntity } from '../../domain/entity/transaction-entity.interface';
 
@@ -94,10 +94,14 @@ export class TransactionResponseDto extends TransactionEntity {
   transactionAmountAfter: number;
 }
 
-export class TransactionDto extends OmitType(TransactionResponseDto, [
-  'uuid',
-  'transactionDate',
-  'transactionAmountAfter',
-  'transactionAmountBefore',
-] as const) {}
+export class TransactionDto {
+  @IsUUID()
+  transactionTypeUuid: string;
+  @IsUUID()
+  transactionAccountFromUuid: string;
+  @IsUUID()
+  transactionAccountToUuid: string;
+  @IsNumber()
+  transactionAmount: number;
+}
 export class TransactionUpdateDto extends PartialType(TransactionResponseDto) {}

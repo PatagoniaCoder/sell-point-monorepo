@@ -15,6 +15,7 @@ import {
   TransactionDto,
   TransactionUpdateDto,
 } from './dto/transaction.dto';
+import { TransactionEntity } from '../domain/entity/transaction-entity.interface';
 
 @Controller('transaction')
 export class TransactionController {
@@ -30,12 +31,12 @@ export class TransactionController {
   }
 
   @Get()
-  async findAllTransactions(): Promise<TransactionDto[]> {
+  async findAllTransactions(): Promise<TransactionEntity[]> {
     return this.transactionService.findAll();
   }
 
   @Post()
-  async createTransaction(@Body() transaction: TransactionDto): Promise<TransactionDto> {
+  async createTransaction(@Body() transaction: TransactionDto): Promise<TransactionEntity> {
     return await this.transactionService.createTransaction(transaction);
   }
 
@@ -50,7 +51,7 @@ export class TransactionController {
   async updateTransaction(
     @Param('uuid') uuid: string,
     @Body() values: TransactionUpdateDto,
-  ): Promise<TransactionDto> {
+  ): Promise<TransactionEntity> {
     return await this.transactionService.updateTransaction(uuid, values);
   }
 }

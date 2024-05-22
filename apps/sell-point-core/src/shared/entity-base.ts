@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
@@ -9,6 +10,9 @@ import {
 export abstract class EntityBase {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ type: 'uuid', nullable: false })
+  uuid: string;
 
   @CreateDateColumn({ name: 'create_at' })
   createAt: Date;

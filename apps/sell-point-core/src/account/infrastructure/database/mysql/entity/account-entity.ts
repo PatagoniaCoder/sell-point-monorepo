@@ -1,10 +1,7 @@
-import { EntityBase } from '../../../../../shared/entity-base';
 import { Column, Entity } from 'typeorm';
+import { EntityBase } from '../../../../../shared/entity-base';
 @Entity('accounts')
 export class AccountEntity extends EntityBase {
-  @Column({ type: 'uuid', nullable: false })
-  uuid: string;
-
   @Column({ type: 'varchar', nullable: false })
   accountNumber: string;
 

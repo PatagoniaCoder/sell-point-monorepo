@@ -5,9 +5,6 @@ import { TransactionTypeEntity } from '../../../../../transaction-type/infrastru
 
 @Entity('transaction')
 export class TransactionEntity extends EntityBase {
-  @Column()
-  uuid: string;
-
   @Column({ name: 'transaction_date', type: 'timestamp' })
   transactionDate: Date;
 

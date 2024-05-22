@@ -4,9 +4,6 @@ import { Column, Entity } from 'typeorm';
 @Entity('transaction_type_entity')
 export class TransactionTypeEntity extends EntityBase {
   @Column()
-  uuid: string;
-
-  @Column()
   description: string;
 
   @Column()

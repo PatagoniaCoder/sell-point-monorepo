@@ -4,9 +4,9 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 @Entity('balance')
 export class BalanceEntity extends EntityBase {
-  @OneToOne(() => AccountEntity, (account) => account.uuid)
-  @JoinColumn({ name: 'account_uuid' })
-  accountUuid: string;
+  @OneToOne(() => AccountEntity, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  account: AccountEntity;
 
   @Column()
   amount: number;

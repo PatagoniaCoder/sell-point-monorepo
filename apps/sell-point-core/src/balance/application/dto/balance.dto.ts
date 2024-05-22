@@ -1,8 +1,7 @@
-import { Type } from 'class-transformer';
-import { IsString, IsEnum, ValidateNested, IsNumber, IsUUID } from 'class-validator';
-import { EOperator, EOrderTypes } from '../../domain/criteria';
-import { BalanceEntity } from '../../domain/entity/balance-entity.interface';
 import { OmitType, PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { EOperator, EOrderTypes } from '../../domain/criteria';
 
 class StringValueObjectDto {
   @IsString()
@@ -63,10 +62,7 @@ export class FilterBalanceDto {
   offset?: number;
 }
 
-export class BalanceResponseDto extends BalanceEntity {
-  @IsUUID()
-  uuid: string;
-
+export class BalanceCreateDto {
   @IsString()
   accountUuid: string;
 
@@ -77,5 +73,6 @@ export class BalanceResponseDto extends BalanceEntity {
   lastTransactionUuid: string;
 }
 
-export class BalanceDto extends OmitType(BalanceResponseDto, ['uuid'] as const) {}
-export class BalanceUpdateDto extends PartialType(BalanceResponseDto) {}
+export class BalanceUpdateDto extends PartialType(
+  OmitType(BalanceCreateDto, ['accountUuid']),
+) {}

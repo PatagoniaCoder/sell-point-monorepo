@@ -11,7 +11,7 @@ export abstract class EntityBase {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'uuid', nullable: false })
+  @Column({ type: 'uuid', nullable: false, unique: true })
   uuid: string;
 
   @CreateDateColumn({ name: 'create_at' })

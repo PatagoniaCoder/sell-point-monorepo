@@ -8,21 +8,18 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { BalanceEntity } from '../domain/entity/balance-entity';
 import { BalanceService } from './balance.service';
-import {
-  BalanceDto,
-  BalanceResponseDto,
-  BalanceUpdateDto,
-  FilterBalanceDto,
-} from './dto/balance.dto';
-import { BalanceEntity } from '../domain/entity/balance-entity.interface';
+import { BalanceCreateDto, BalanceUpdateDto, FilterBalanceDto } from './dto/balance.dto';
 
+@ApiTags('Balance')
 @Controller('balance')
 export class BalanceController {
   constructor(private readonly balanceService: BalanceService) {}
 
   @Post('/filter')
-  async filter(@Body() filterBalance: FilterBalanceDto): Promise<BalanceResponseDto[]> {
+  async filter(@Body() filterBalance: FilterBalanceDto): Promise<BalanceEntity[]> {
     return await this.balanceService.findByCriteria(filterBalance).catch((err) => {
       throw new BadRequestException('Something is wrong', err.message);
     });
@@ -34,7 +31,7 @@ export class BalanceController {
   }
 
   @Post()
-  async createBalance(@Body() transaction: BalanceDto): Promise<BalanceEntity> {
+  async createBalance(@Body() transaction: BalanceCreateDto): Promise<BalanceEntity> {
     return await this.balanceService.createBalance(transaction);
   }
 

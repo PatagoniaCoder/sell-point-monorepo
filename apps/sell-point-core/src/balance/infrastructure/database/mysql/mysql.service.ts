@@ -4,14 +4,15 @@ import { Repository } from 'typeorm';
 import { BalanceValue } from '../../../domain/value-object/balance-value';
 import { BalanceRepository } from '../../../domain/repository/balance-repository.interface';
 import { MySqlCriteriaConverter } from './mysql-criteria-convertor';
-import { BalanceEntity } from './entity/balance-entity';
+import { BalanceEntity } from '../../../domain/entity/balance-entity';
+import { BalanceEntity as EntityBalance } from './entity/balance-entity';
 import { Criteria } from '../../../domain/criteria';
 
 @Injectable()
 export class MysqlService extends MySqlCriteriaConverter implements BalanceRepository {
   constructor(
-    @InjectRepository(BalanceEntity)
-    private readonly mysqlRepository: Repository<BalanceEntity>,
+    @InjectRepository(EntityBalance)
+    private readonly mysqlRepository: Repository<EntityBalance>,
   ) {
     super();
   }
@@ -22,7 +23,7 @@ export class MysqlService extends MySqlCriteriaConverter implements BalanceRepos
   }
 
   async findAllBalances(): Promise<BalanceEntity[]> {
-    return await this.mysqlRepository.find({ take: 20 });
+    return await this.mysqlRepository.find({ take: 20, relations: { account: true } });
   }
 
   async findByCriteria(queryParams: Criteria): Promise<BalanceEntity[]> {
@@ -54,7 +55,7 @@ export class MysqlService extends MySqlCriteriaConverter implements BalanceRepos
     await this.mysqlRepository.softDelete({ uuid });
   }
 
-  async updateBalance(uuid: string, value: Partial<BalanceValue>): Promise<BalanceEntity> {
+  async updateBalance(uuid: string, value: BalanceValue): Promise<BalanceEntity> {
     await this.mysqlRepository.update({ uuid }, value);
     return await this.mysqlRepository.findOne({ where: { uuid } });
   }

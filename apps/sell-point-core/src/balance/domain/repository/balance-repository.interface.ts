@@ -1,5 +1,5 @@
 import { Criteria } from '../criteria';
-import { BalanceEntity } from '../entity/balance-entity.interface';
+import { BalanceEntity } from '../entity/balance-entity';
 import { BalanceValue } from '../value-object/balance-value';
 
 export abstract class BalanceRepository {

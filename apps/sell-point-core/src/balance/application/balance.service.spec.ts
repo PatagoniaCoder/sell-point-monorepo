@@ -3,6 +3,7 @@ import { BalanceService } from './balance.service';
 import { BalanceRepository } from '../domain/repository/balance-repository.interface';
 import { FilterBalanceDto } from './dto/balance.dto';
 import { EOrderTypes } from '../domain/criteria';
+import { AccountRepository } from '../../account/domain/repository/account.repository.interface';
 
 describe('BalanceService', () => {
   let service: BalanceService;
@@ -13,6 +14,7 @@ describe('BalanceService', () => {
       providers: [
         BalanceService,
         { provide: BalanceRepository, useValue: { findByCriteria: jest.fn() } },
+        { provide: AccountRepository, useValue: { findByCriteria: jest.fn() } },
       ],
     }).compile();
 

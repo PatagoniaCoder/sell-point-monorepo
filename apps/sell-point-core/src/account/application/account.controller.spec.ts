@@ -39,7 +39,7 @@ describe('AccountController', () => {
       expect(controller.filter).toBeDefined();
     });
 
-    it('should be findByCriteria to Have Been Called', () => {
+    it('should findByCriteria have been called', () => {
       controller.filter(null);
       expect(service.findByCriteria).toHaveBeenCalled();
     });
@@ -51,7 +51,7 @@ describe('AccountController', () => {
     it('should findAllAccounts be defined', () => {
       expect(controller.findAllAccounts).toBeDefined();
     });
-    it('should be findAll to Have Been Called', () => {
+    it('should findAll have been called', () => {
       controller.findAllAccounts();
       expect(service.findAll).toHaveBeenCalled();
     });
@@ -64,7 +64,7 @@ describe('AccountController', () => {
       expect(controller.createAccount).toBeDefined();
     });
 
-    it('should be createAccount to Have Been Called', () => {
+    it('should createAccount have been called', () => {
       controller.createAccount(null);
       expect(service.createAccount).toHaveBeenCalled();
     });
@@ -78,7 +78,7 @@ describe('AccountController', () => {
       expect(controller.deleteAccount).toBeDefined();
     });
 
-    it('should be deleteAccount to Have Been Called', () => {
+    it('should deleteAccount have been called', () => {
       controller.deleteAccount(null);
       expect(service.deleteAccount).toHaveBeenCalled();
     });
@@ -90,7 +90,7 @@ describe('AccountController', () => {
     it('should updateAccount be defined', () => {
       expect(controller.updateAccount).toBeDefined();
     });
-    it('should be updateAccount to Have Been Called', () => {
+    it('should updateAccount have been called', () => {
       controller.updateAccount(null, null);
       expect(service.updateAccount).toHaveBeenCalled();
     });

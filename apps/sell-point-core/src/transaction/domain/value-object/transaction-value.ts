@@ -9,9 +9,9 @@ export class TransactionValue implements TransactionEntity {
   transactionType: TransactionTypeEntity;
   transactionAccountFrom: AccountEntity;
   transactionAccountTo: AccountEntity;
-  transactionAmount: number;
-  transactionAmountBefore: number;
-  transactionAmountAfter: number;
+  transactionAmount: number = 0; // remove when balance is implemented
+  transactionAmountBefore: number = 0; // remove when balance is implemented
+  transactionAmountAfter: number = 0; // remove when balance is implemented
 
   constructor(
     transactionType: TransactionTypeEntity,

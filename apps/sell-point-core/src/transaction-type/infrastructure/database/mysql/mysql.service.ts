@@ -36,6 +36,10 @@ export class MysqlService extends MySqlCriteriaConverter implements TransactionT
     });
   }
 
+  async findByUuid(uuid: string): Promise<TransactionTypeEntity> {
+    return await this.mysqlRepository.findOne({ where: { uuid } });
+  }
+
   async deleteTransactionType(uuid: string): Promise<void> {
     const entity = await this.mysqlRepository
       .findOneOrFail({

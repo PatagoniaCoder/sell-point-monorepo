@@ -37,7 +37,7 @@ describe('TransactionTypeController', () => {
       expect(controller.filter).toBeDefined();
     });
 
-    it('should be findByCriteria to Have Been Called', () => {
+    it('should findByCriteria have been called', () => {
       controller.filter(null);
       expect(service.findByCriteria).toHaveBeenCalled();
     });
@@ -49,7 +49,7 @@ describe('TransactionTypeController', () => {
     it('should findAllTransactionTypes be defined', () => {
       expect(controller.findAllTransactionTypes).toBeDefined();
     });
-    it('should be findAll to Have Been Called', () => {
+    it('should findAll have been called', () => {
       controller.findAllTransactionTypes();
       expect(service.findAll).toHaveBeenCalled();
     });
@@ -62,7 +62,7 @@ describe('TransactionTypeController', () => {
       expect(controller.createTransactionType).toBeDefined();
     });
 
-    it('should be createTransactionType to Have Been Called', () => {
+    it('should createTransactionType have been called', () => {
       controller.createTransactionType(null);
       expect(service.createTransactionType).toHaveBeenCalled();
     });
@@ -76,7 +76,7 @@ describe('TransactionTypeController', () => {
       expect(controller.deleteTransactionType).toBeDefined();
     });
 
-    it('should be deleteTransactionType to Have Been Called', () => {
+    it('should deleteTransactionType have been called', () => {
       controller.deleteTransactionType(null);
       expect(service.deleteTransactionType).toHaveBeenCalled();
     });
@@ -88,7 +88,7 @@ describe('TransactionTypeController', () => {
     it('should updateTransactionType be defined', () => {
       expect(controller.updateTransactionType).toBeDefined();
     });
-    it('should be updateTransactionType to Have Been Called', () => {
+    it('should updateTransactionType have been called', () => {
       controller.updateTransactionType(null, null);
       expect(service.updateTransactionType).toHaveBeenCalled();
     });

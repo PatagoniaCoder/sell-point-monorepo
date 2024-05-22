@@ -6,6 +6,7 @@ export abstract class AccountRepository {
   abstract createAccount(value: AccountValue): Promise<AccountEntity>;
   abstract findAllAccounts(): Promise<AccountEntity[]>;
   abstract findByCriteria(queryParams: Criteria): Promise<AccountEntity[]>;
+  abstract findByUuid(uuid: string): Promise<AccountEntity>;
   abstract deleteAccount(uuid: string): Promise<void>;
   abstract updateAccount(uuid: string, value: Partial<AccountValue>): Promise<AccountEntity>;
 }

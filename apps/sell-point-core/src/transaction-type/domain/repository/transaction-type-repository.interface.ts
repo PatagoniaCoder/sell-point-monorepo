@@ -6,6 +6,7 @@ export abstract class TransactionTypeRepository {
   abstract createTransactionType(value: TransactionTypeValue): Promise<TransactionTypeEntity>;
   abstract findAllTransactionTypes(): Promise<TransactionTypeEntity[]>;
   abstract findByCriteria(queryParams: Criteria): Promise<TransactionTypeEntity[]>;
+  abstract findByUuid(uuid: string): Promise<TransactionTypeEntity>;
   abstract deleteTransactionType(uuid: string): Promise<void>;
   abstract updateTransactionType(
     uuid: string,

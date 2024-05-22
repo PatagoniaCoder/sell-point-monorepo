@@ -63,7 +63,7 @@ export class FilterTransactionTypeDto {
   offset?: number;
 }
 
-export class TransactionTypeResponseDto implements TransactionTypeEntity {
+export class TransactionTypeResponseDto extends TransactionTypeEntity {
   @IsUUID()
   uuid: string;
 

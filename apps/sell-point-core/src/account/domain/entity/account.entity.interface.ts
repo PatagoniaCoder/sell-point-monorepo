@@ -1,4 +1,4 @@
-export interface AccountEntity {
+export abstract class AccountEntity {
   uuid: string;
   accountNumber: string;
   description: string;

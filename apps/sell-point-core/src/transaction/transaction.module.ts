@@ -12,7 +12,6 @@ import { AccountRepository } from '../account/domain/repository/account.reposito
 @Module({
   imports: [MysqlRepositoryModule],
   controllers: [TransactionController],
-
   providers: [
     TransactionService,
     { provide: TransactionRepository, useClass: MysqlService },

@@ -8,10 +8,10 @@ export class BalanceValue implements BalanceEntity {
   amount: number;
   lastTransactionUuid: string;
 
-  constructor(account: AccountEntity, amount: number, lastTransactionUuid: string) {
+  constructor(account: AccountEntity, amount: number, lastTransactionUuid?: string) {
     this.uuid = uuid4();
     this.account = account;
     this.amount = amount;
-    this.lastTransactionUuid = lastTransactionUuid;
+    this.lastTransactionUuid = lastTransactionUuid ? lastTransactionUuid : null;
   }
 }

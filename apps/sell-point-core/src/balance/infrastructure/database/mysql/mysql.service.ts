@@ -19,7 +19,7 @@ export class MysqlService extends MySqlCriteriaConverter implements BalanceRepos
 
   async createBalance(value: BalanceValue): Promise<BalanceEntity> {
     const newBalance = this.mysqlRepository.create(value);
-    return await this.mysqlRepository.manager.save(newBalance);
+    return await this.mysqlRepository.save(newBalance);
   }
 
   async findAllBalances(): Promise<BalanceEntity[]> {

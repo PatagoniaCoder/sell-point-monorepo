@@ -1,6 +1,6 @@
 import { OmitType, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { EOperator, EOrderTypes } from '../../domain/criteria';
 
 class StringValueObjectDto {
@@ -69,6 +69,7 @@ export class BalanceCreateDto {
   @IsNumber()
   amount: number;
 
+  @IsOptional()
   @IsString()
   lastTransactionUuid: string;
 }

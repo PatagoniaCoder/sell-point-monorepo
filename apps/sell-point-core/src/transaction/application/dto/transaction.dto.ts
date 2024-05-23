@@ -1,10 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNumber, IsString, IsUUID, ValidateNested } from 'class-validator';
-import { AccountResponseDto } from '../../../account/application/dto/account.dto';
-import { TransactionTypeResponseDto } from '../../../transaction-type/application/dto/transaction-type.dto';
+import { IsEnum, IsNumber, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { EOperator, EOrderTypes } from '../../domain/criteria';
-import { TransactionEntity } from '../../domain/entity/transaction-entity.interface';
 
 class StringValueObjectDto {
   @IsString()
@@ -65,36 +62,7 @@ export class FilterTransactionDto {
   offset?: number;
 }
 
-export class TransactionResponseDto extends TransactionEntity {
-  @IsUUID()
-  uuid: string;
-
-  @IsDate()
-  transactionDate: Date;
-
-  @ValidateNested({ each: true })
-  @Type(() => TransactionTypeResponseDto)
-  transactionType: TransactionTypeResponseDto;
-
-  @ValidateNested({ each: true })
-  @Type(() => AccountResponseDto)
-  transactionAccountFrom: AccountResponseDto;
-
-  @ValidateNested({ each: true })
-  @Type(() => AccountResponseDto)
-  transactionAccountTo: AccountResponseDto;
-
-  @IsNumber()
-  transactionAmount: number;
-
-  @IsNumber()
-  transactionAmountBefore: number;
-
-  @IsNumber()
-  transactionAmountAfter: number;
-}
-
-export class TransactionDto {
+export class TransactionCreateDto {
   @IsUUID()
   transactionTypeUuid: string;
   @IsUUID()
@@ -104,4 +72,4 @@ export class TransactionDto {
   @IsNumber()
   transactionAmount: number;
 }
-export class TransactionUpdateDto extends PartialType(TransactionResponseDto) {}
+export class TransactionUpdateDto extends PartialType(TransactionCreateDto) {}

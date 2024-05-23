@@ -4,13 +4,13 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 @Entity('balance')
 export class BalanceEntity extends EntityBase {
-  @OneToOne(() => AccountEntity, { onDelete: 'CASCADE' })
+  @OneToOne(() => AccountEntity, (account) => account.balance, { onDelete: 'CASCADE' })
   @JoinColumn()
   account: AccountEntity;
 
   @Column()
   amount: number;
 
-  @Column({ name: 'last_transaction_uuid', type: 'uuid' })
+  @Column({ name: 'last_transaction_uuid', type: 'uuid', nullable: true })
   lastTransactionUuid: string;
 }

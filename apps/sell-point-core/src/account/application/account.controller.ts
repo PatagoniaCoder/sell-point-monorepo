@@ -9,31 +9,29 @@ import {
   Post,
 } from '@nestjs/common';
 import { AccountService } from './account.service';
-import {
-  FilterAccountDto,
-  AccountDto,
-  AccountResponseDto,
-  AccountUpdateDto,
-} from './dto/account.dto';
+import { FilterAccountDto, AccountCreateDto, AccountUpdateDto } from './dto/account.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { AccountEntity } from '../domain/entity/account.entity.interface';
 
+@ApiTags('Account')
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
   @Post('/filter')
-  async filter(@Body() filterAccount: FilterAccountDto): Promise<AccountResponseDto[]> {
+  async filter(@Body() filterAccount: FilterAccountDto): Promise<AccountEntity[]> {
     return await this.accountService.findByCriteria(filterAccount).catch((err) => {
       throw new BadRequestException('Something is wrong', err.message);
     });
   }
 
   @Get()
-  async findAllAccounts(): Promise<AccountDto[]> {
-    return this.accountService.findAll();
+  async findAllAccounts(): Promise<AccountEntity[]> {
+    return await this.accountService.findAll();
   }
 
   @Post()
-  async createAccount(@Body() account: AccountDto): Promise<AccountDto> {
+  async createAccount(@Body() account: AccountCreateDto): Promise<AccountEntity> {
     return await this.accountService.createAccount(account);
   }
 
@@ -48,7 +46,7 @@ export class AccountController {
   async updateAccount(
     @Param('uuid') uuid: string,
     @Body() values: AccountUpdateDto,
-  ): Promise<AccountDto> {
+  ): Promise<AccountEntity> {
     return await this.accountService.updateAccount(uuid, values);
   }
 }

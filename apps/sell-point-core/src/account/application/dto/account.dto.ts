@@ -1,8 +1,7 @@
-import { OmitType, PartialType } from '@nestjs/swagger';
+import { PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { EOperator, EOrderTypes } from '../../domain/criteria';
-import { AccountEntity } from '../../domain/entity/account.entity.interface';
 
 class StringValueObjectDto {
   @IsString()
@@ -63,14 +62,12 @@ export class FilterAccountDto {
   offset?: number;
 }
 
-export class AccountResponseDto extends AccountEntity {
-  @IsUUID()
-  uuid: string;
+export class AccountCreateDto {
   @IsString()
   accountNumber: string;
+
   @IsString()
   description: string;
 }
 
-export class AccountDto extends OmitType(AccountResponseDto, ['uuid'] as const) {}
-export class AccountUpdateDto extends PartialType(AccountResponseDto) {}
+export class AccountUpdateDto extends PartialType(AccountCreateDto) {}

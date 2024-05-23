@@ -11,8 +11,7 @@ import {
 import { TransactionService } from './transaction.service';
 import {
   FilterTransactionDto,
-  TransactionResponseDto,
-  TransactionDto,
+  TransactionCreateDto,
   TransactionUpdateDto,
 } from './dto/transaction.dto';
 import { TransactionEntity } from '../domain/entity/transaction-entity.interface';
@@ -22,9 +21,7 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post('/filter')
-  async filter(
-    @Body() filterTransaction: FilterTransactionDto,
-  ): Promise<TransactionResponseDto[]> {
+  async filter(@Body() filterTransaction: FilterTransactionDto): Promise<TransactionEntity[]> {
     return await this.transactionService.findByCriteria(filterTransaction).catch((err) => {
       throw new BadRequestException('Something is wrong', err.message);
     });
@@ -36,7 +33,9 @@ export class TransactionController {
   }
 
   @Post()
-  async createTransaction(@Body() transaction: TransactionDto): Promise<TransactionEntity> {
+  async createTransaction(
+    @Body() transaction: TransactionCreateDto,
+  ): Promise<TransactionEntity> {
     return await this.transactionService.createTransaction(transaction);
   }
 

@@ -3,7 +3,7 @@ import { TransactionRepository } from '../domain/repository/transaction-reposito
 import { Criteria, Filters, Order } from '../domain/criteria';
 import {
   FilterTransactionDto,
-  TransactionDto,
+  TransactionCreateDto,
   TransactionUpdateDto,
 } from './dto/transaction.dto';
 import { EFilter } from '../domain/criteria/enum-filter';
@@ -20,7 +20,7 @@ export class TransactionService {
     private readonly accountRepository: AccountRepository,
   ) {}
 
-  async createTransaction(transaction: TransactionDto): Promise<TransactionEntity> {
+  async createTransaction(transaction: TransactionCreateDto): Promise<TransactionEntity> {
     const {
       transactionTypeUuid,
       transactionAccountFromUuid,

@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Criteria } from '../../../domain/criteria';
-import { TransactionTypeRepository } from '../../../domain/repository/transaction-type-repository.interface';
-import { TransactionTypeValue } from '../../../domain/value-object/transaction-type-value';
-import { TransactionTypeEntity } from './entity/transaction-type-entity';
-import { MySqlCriteriaConverter } from './mysql-criteria-convertor';
+import { Criteria } from '@sell-point-core-share/domain/criteria';
+import { MySqlCriteriaConverter } from '@sell-point-core-share/infrastructure/database/mysql/mysql-criteria-convertor';
+
+import { TransactionTypeRepository } from '@sell-point-core-transaction-type/domain/repository/transaction-type-repository.interface';
+import { TransactionTypeValue } from '@sell-point-core-transaction-type/domain/value-object/transaction-type-value';
+import { TransactionTypeEntity } from './entity/transaction-type.entity';
 
 @Injectable()
 export class MysqlService extends MySqlCriteriaConverter implements TransactionTypeRepository {

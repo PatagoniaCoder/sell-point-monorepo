@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import { config as dotenvConfig } from 'dotenv';
 import { join } from 'path';
 dotenvConfig();
+
 export const connectionSource = new DataSource({
   type: 'mysql',
   host: process.env.MYSQL_HOST,
@@ -12,6 +13,6 @@ export const connectionSource = new DataSource({
   synchronize: false,
   logging: false,
   migrations: [join(__dirname, '../migrations/*.ts')],
-  entities: [join(__dirname, '../**/**/**/*-entity.ts')],
+  entities: [join(__dirname, '../**/**/**/*.entity.ts')],
   migrationsRun: true,
 });

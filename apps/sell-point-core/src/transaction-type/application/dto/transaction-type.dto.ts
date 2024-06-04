@@ -1,8 +1,8 @@
 import { OmitType, PartialType } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsString, IsEnum, ValidateNested, IsNumber, IsUUID } from 'class-validator';
-import { EOperator, EOrderTypes } from '../../domain/criteria';
-import { TransactionTypeEntity } from '../../domain/entity/transaction-type-entity.interface';
+import { EntityTransactionType } from '../../domain/entity/entity-transaction-type';
+import { EOperator, EOrderTypes } from '@sell-point-core-share/domain/criteria';
 
 class StringValueObjectDto {
   @IsString()
@@ -63,7 +63,7 @@ export class FilterTransactionTypeDto {
   offset?: number;
 }
 
-export class TransactionTypeResponseDto extends TransactionTypeEntity {
+export class TransactionTypeResponseDto extends EntityTransactionType {
   @IsUUID()
   uuid: string;
 

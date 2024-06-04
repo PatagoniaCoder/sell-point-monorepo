@@ -6,8 +6,8 @@ import {
   TransactionTypeUpdateDto,
 } from './dto/transaction-type.dto';
 import { TransactionTypeValue } from '../domain/value-object/transaction-type-value';
-import { EFilter } from '../domain/criteria/enum-filter';
-import { Criteria, Filters, Order } from '../domain/criteria';
+import { Criteria, Filters, Order } from '@sell-point-core-share/domain/criteria';
+import { EFilter } from '@sell-point-core-share/domain/criteria/enum-filter';
 
 @Injectable()
 export class TransactionTypeService {

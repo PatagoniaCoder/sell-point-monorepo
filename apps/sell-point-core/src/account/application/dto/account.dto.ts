@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
+import { EOperator, EOrderTypes } from '@sell-point-core-share/domain/criteria';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
-import { EOperator, EOrderTypes } from '../../domain/criteria';
 
 class StringValueObjectDto {
   @IsString()

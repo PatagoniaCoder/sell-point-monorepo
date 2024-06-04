@@ -16,6 +16,13 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@sell-point-core-share/*":["./apps/sell-point-core/src/shared/*"],
+      "@sell-point-core-account/*":["./apps/sell-point-core/src/account/*"],
+      "@sell-point-core-transaction/*":["./apps/sell-point-core/src/transaction/*"],
+      "@sell-point-core-transaction-type/*":["./apps/sell-point-core/src/transaction-type/*"],
+      "@sell-point-core/*":["./apps/sell-point-core/src/*"]
+    }
   }
 }

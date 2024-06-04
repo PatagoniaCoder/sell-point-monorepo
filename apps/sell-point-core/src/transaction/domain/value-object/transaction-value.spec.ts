@@ -1,7 +1,10 @@
+import { EntityTransactionType } from '@sell-point-core-transaction-type/domain/entity/entity-transaction-type';
 import { TransactionValue } from './transaction-value';
 
 describe('TransactionValue', () => {
   it('should be defined', () => {
-    expect(new TransactionValue(null, null, null, null)).toBeDefined();
+    expect(
+      new TransactionValue({ action: 'in' } as EntityTransactionType, null, null),
+    ).toBeDefined();
   });
 });

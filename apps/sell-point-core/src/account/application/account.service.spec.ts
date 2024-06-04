@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AccountService } from './account.service';
+import { EOrderTypes } from '@sell-point-core-share/domain/criteria';
 import { AccountRepository } from '../domain/repository/account.repository.interface';
+import { AccountService } from './account.service';
 import { FilterAccountDto } from './dto/account.dto';
-import { EOrderTypes } from '../domain/criteria';
 
 describe('AccountService', () => {
   let service: AccountService;

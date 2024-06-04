@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TransactionTypeService } from './transaction-type.service';
+import { FilterAccountDto } from '@sell-point-core-account/application/dto/account.dto';
+import { EOrderTypes } from '@sell-point-core-share/domain/criteria';
 import { TransactionTypeRepository } from '../domain/repository/transaction-type-repository.interface';
-import { FilterAccountDto } from '../../account/application/dto/account.dto';
-import { EOrderTypes } from '../domain/criteria';
+import { TransactionTypeService } from './transaction-type.service';
 
 describe('TransactionTypeService', () => {
   let service: TransactionTypeService;

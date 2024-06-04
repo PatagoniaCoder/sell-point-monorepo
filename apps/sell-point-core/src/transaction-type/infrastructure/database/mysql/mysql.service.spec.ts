@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MysqlService } from './mysql.service';
-import { TransactionTypeEntity } from './entity/transaction-type-entity';
+import { TransactionTypeEntity } from './entity/transaction-type.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('MysqlService', () => {

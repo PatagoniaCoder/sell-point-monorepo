@@ -1,7 +1,7 @@
 import { v4 as uuid4 } from 'uuid';
-import { TransactionTypeEntity } from '../entity/transaction-type-entity.interface';
+import { EntityTransactionType } from '../entity/entity-transaction-type';
 
-export class TransactionTypeValue implements TransactionTypeEntity {
+export class TransactionTypeValue implements EntityTransactionType {
   uuid: string;
   description: string;
   action: string;

@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
+import { EOperator, EOrderTypes } from '@sell-point-core-share/domain/criteria';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsString, IsUUID, ValidateNested } from 'class-validator';
-import { EOperator, EOrderTypes } from '../../domain/criteria';
 
 class StringValueObjectDto {
   @IsString()
@@ -66,9 +66,7 @@ export class TransactionCreateDto {
   @IsUUID()
   transactionTypeUuid: string;
   @IsUUID()
-  transactionAccountFromUuid: string;
-  @IsUUID()
-  transactionAccountToUuid: string;
+  transactionAccountUuid: string;
   @IsNumber()
   transactionAmount: number;
 }

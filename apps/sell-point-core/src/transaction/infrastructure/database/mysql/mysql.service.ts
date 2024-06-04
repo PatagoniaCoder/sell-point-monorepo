@@ -1,33 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { MySqlCriteriaConverter } from './mysql-criteria-convertor';
-import { TransactionRepository } from '../../../domain/repository/transaction-repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TransactionEntity } from './entity/transaction-entity';
 import { Repository } from 'typeorm';
-import { TransactionValue } from '../../../domain/value-object/transaction-value';
-import { Criteria } from '../../../domain/criteria';
+
+import { Criteria } from '@sell-point-core-share/domain/criteria';
+import { MySqlCriteriaConverter } from '@sell-point-core-share/infrastructure/database/mysql/mysql-criteria-convertor';
+import { EntityTransaction } from '@sell-point-core-transaction/domain/entity/entity-transaction';
+import { TransactionRepository } from '@sell-point-core-transaction/domain/repository/transaction-repository.interface';
+import { TransactionValue } from '@sell-point-core-transaction/domain/value-object/transaction-value';
+import { TransactionEntity } from './entity/transaction.entity';
 
 @Injectable()
 export class MysqlService extends MySqlCriteriaConverter implements TransactionRepository {
   constructor(
     @InjectRepository(TransactionEntity)
-    private readonly mysqlRepository: Repository<TransactionEntity>,
+    private readonly transactionMySqlRepository: Repository<TransactionEntity>,
   ) {
     super();
   }
 
-  async createTransaction(value: TransactionValue): Promise<TransactionEntity> {
-    const newAccount = this.mysqlRepository.create(value);
-    return await this.mysqlRepository.manager.save(newAccount);
+  async createTransaction(value: TransactionValue): Promise<EntityTransaction> {
+    const newTransaction = this.transactionMySqlRepository.create(value);
+    return await this.transactionMySqlRepository.save(newTransaction);
   }
 
-  async findAllTransactions(): Promise<TransactionEntity[]> {
-    return await this.mysqlRepository.find({ take: 20 });
+  async findAllTransactions(): Promise<EntityTransaction[]> {
+    return await this.transactionMySqlRepository.find({
+      take: 20,
+      relations: { transactionAccount: true, transactionType: true },
+    });
   }
 
-  async findByCriteria(queryParams: Criteria): Promise<TransactionEntity[]> {
+  async findByCriteria(queryParams: Criteria): Promise<EntityTransaction[]> {
     const { filter, order, limit, skip } = this.convert(queryParams);
-    return await this.mysqlRepository.find({
+    return await this.transactionMySqlRepository.find({
       where: filter.where,
       order: order,
       take: limit,
@@ -36,7 +41,7 @@ export class MysqlService extends MySqlCriteriaConverter implements TransactionR
   }
 
   async deleteTransaction(uuid: string): Promise<void> {
-    const entity = await this.mysqlRepository
+    const entity = await this.transactionMySqlRepository
       .findOneOrFail({
         where: { uuid },
         withDeleted: true,
@@ -47,14 +52,14 @@ export class MysqlService extends MySqlCriteriaConverter implements TransactionR
     if (entity.deleteAt !== null) {
       throw new Error('Entity has already been deleted');
     }
-    await this.mysqlRepository.softDelete({ uuid });
+    await this.transactionMySqlRepository.softDelete({ uuid });
   }
 
   async updateTransaction(
     uuid: string,
     value: Partial<TransactionValue>,
-  ): Promise<TransactionEntity> {
-    await this.mysqlRepository.update({ uuid }, value);
-    return await this.mysqlRepository.findOne({ where: { uuid } });
+  ): Promise<EntityTransaction> {
+    await this.transactionMySqlRepository.update({ uuid }, value);
+    return await this.transactionMySqlRepository.findOne({ where: { uuid } });
   }
 }

@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { Criteria, Filters, Order } from '@sell-point-core-share/domain/criteria';
+import { EFilter } from '@sell-point-core-share/domain/criteria/enum-filter';
+import { AccountRepository } from '../../account/domain/repository/account.repository.interface';
+import { TransactionTypeRepository } from '../../transaction-type/domain/repository/transaction-type-repository.interface';
+import { EntityTransaction } from '../domain/entity/entity-transaction';
 import { TransactionRepository } from '../domain/repository/transaction-repository.interface';
-import { Criteria, Filters, Order } from '../domain/criteria';
+import { TransactionValue } from '../domain/value-object/transaction-value';
 import {
   FilterTransactionDto,
   TransactionCreateDto,
   TransactionUpdateDto,
 } from './dto/transaction.dto';
-import { EFilter } from '../domain/criteria/enum-filter';
-import { TransactionValue } from '../domain/value-object/transaction-value';
-import { TransactionTypeRepository } from '../../transaction-type/domain/repository/transaction-type-repository.interface';
-import { AccountRepository } from '../../account/domain/repository/account.repository.interface';
-import { TransactionEntity } from '../domain/entity/transaction-entity.interface';
 
 @Injectable()
 export class TransactionService {
@@ -20,27 +20,16 @@ export class TransactionService {
     private readonly accountRepository: AccountRepository,
   ) {}
 
-  async createTransaction(transaction: TransactionCreateDto): Promise<TransactionEntity> {
-    const {
-      transactionTypeUuid,
-      transactionAccountFromUuid,
-      transactionAccountToUuid,
-      transactionAmount,
-    } = transaction;
+  async createTransaction(transaction: TransactionCreateDto): Promise<EntityTransaction> {
+    const { transactionTypeUuid, transactionAmount, transactionAccountUuid } = transaction;
+
     const transactionType =
       await this.transactionTypeRepository.findByUuid(transactionTypeUuid);
-    const transactionAccountFrom = await this.accountRepository.findByUuid(
-      transactionAccountFromUuid,
-    );
-    const transactionAccountTo = await this.accountRepository.findByUuid(
-      transactionAccountToUuid,
-    );
-    const newTransaction = new TransactionValue(
-      transactionType,
-      transactionAccountFrom,
-      transactionAccountTo,
-      transactionAmount,
-    );
+
+    const account = await this.accountRepository.findByUuid(transactionAccountUuid);
+
+    const newTransaction = new TransactionValue(transactionType, transactionAmount, account);
+
     return await this.transactionRepository.createTransaction(newTransaction);
   }
 
@@ -53,7 +42,7 @@ export class TransactionService {
   async updateTransaction(
     uuid: string,
     values: TransactionUpdateDto,
-  ): Promise<TransactionEntity> {
+  ): Promise<EntityTransaction> {
     return await this.transactionRepository.updateTransaction(uuid, values);
   }
 
@@ -77,7 +66,7 @@ export class TransactionService {
     return await this.transactionRepository.findByCriteria(criteria);
   }
 
-  async findAll(): Promise<TransactionEntity[]> {
+  async findAll(): Promise<EntityTransaction[]> {
     return await this.transactionRepository.findAllTransactions();
   }
 }

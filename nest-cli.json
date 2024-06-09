@@ -52,6 +52,33 @@
       "compilerOptions": {
         "tsConfigPath": "apps/sell-point-core/tsconfig.app.json"
       }
+    },
+    "sell-point-account": {
+      "type": "application",
+      "root": "apps/sell-point-account",
+      "entryFile": "main",
+      "sourceRoot": "apps/sell-point-account/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/sell-point-account/tsconfig.app.json"
+      }
+    },
+    "sell-point-transaction": {
+      "type": "application",
+      "root": "apps/sell-point-transaction",
+      "entryFile": "main",
+      "sourceRoot": "apps/sell-point-transaction/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/sell-point-transaction/tsconfig.app.json"
+      }
+    },
+    "sell-point-balance": {
+      "type": "application",
+      "root": "apps/sell-point-balance",
+      "entryFile": "main",
+      "sourceRoot": "apps/sell-point-balance/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/sell-point-balance/tsconfig.app.json"
+      }
     }
   }
 }

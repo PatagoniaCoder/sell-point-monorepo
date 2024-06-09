@@ -18,11 +18,20 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@sell-point-core-share/*":["./apps/sell-point-core/src/shared/*"],
-      "@sell-point-core-account/*":["./apps/sell-point-core/src/account/*"],
-      "@sell-point-core-transaction/*":["./apps/sell-point-core/src/transaction/*"],
-      "@sell-point-core-transaction-type/*":["./apps/sell-point-core/src/transaction-type/*"],
-      "@sell-point-core/*":["./apps/sell-point-core/src/*"]
+      "@sell-point-transaction/*": ["./apps/sell-point-transaction/src/transaction/*"],
+      "@sell-point-transaction-type/*": [
+        "./apps/sell-point-transaction/src/transaction-type/*"
+      ],
+      "@sell-point-transaction-share/*": ["./apps/sell-point-transaction/src/shared/*"],
+      "@sell-point-account/*": ["./apps/sell-point-account/src/account/*"],
+      "@sell-point-account-share/*": ["./apps/sell-point-account/src/shared/*"],
+      "@sell-point-balance/*": ["./apps/sell-point-balance/src/balance/*"],
+      "@sell-point-balance-share/*": ["./apps/sell-point-balance/src/shared/*"],
+      "@sell-point-core-share/*": ["./apps/sell-point-core/src/shared/*"],
+      "@sell-point-core/*": ["./apps/sell-point-core/src/*"],
+      "@sell-point-core-transaction-type/*": ["./apps/sell-point-core/src/transaction-type/*"],
+      "@sell-point-core-transaction/*": ["./apps/sell-point-core/src/transaction/*"],
+      "@sell-point-core-account/*": ["./apps/sell-point-core/src/account/*"]
     }
   }
 }

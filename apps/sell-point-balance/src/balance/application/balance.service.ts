@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Criteria, Filters, Order } from '@sell-point-balance-share/domain/criteria';
 import { EFilter } from '@sell-point-balance-share/domain/criteria/enum-filter';
 import { EntityBalance } from '../domain/entity/entity-balance';
-import { BalanceRepository } from '../domain/repository/balance.repository.interface';
+import { BalanceRepository } from '../domain/repository/balance.repository';
 import { BalanceValue } from '../domain/value-object/balance.value';
 import { BalanceCreateDto, BalanceUpdateDto, FilterBalanceDto } from './dto/balance.dto';
 

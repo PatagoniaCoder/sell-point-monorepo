@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AccountRepository } from '@sell-point-core-account/domain/repository/account.repository.interface';
-import { AccountEntity } from '@sell-point-core-account/infrastructure/database/mysql/entity/account.entity';
 import { TransactionTypeRepository } from '@sell-point-core-transaction-type/domain/repository/transaction-type-repository.interface';
 import { TransactionTypeEntity } from '@sell-point-core-transaction-type/infrastructure/database/mysql/entity/transaction-type.entity';
+import { EntityAccount } from '@sell-point-core/account/domain/entity/entity-account';
 import { TransactionRepository } from '../domain/repository/transaction-repository.interface';
 import { TransactionService } from './transaction.service';
 
@@ -73,7 +73,7 @@ describe('TransactionService', () => {
     jest
       .spyOn(transactionTypeRepository, 'findByUuid')
       .mockResolvedValue({} as TransactionTypeEntity);
-    jest.spyOn(accountRepository, 'findByUuid').mockResolvedValue({} as AccountEntity);
+    jest.spyOn(accountRepository, 'findByUuid').mockResolvedValue({} as EntityAccount);
     jest.spyOn(transactionRepository, 'createTransaction');
     await service.createTransaction(transaction);
     expect(transactionTypeRepository.findByUuid).toHaveBeenCalled();

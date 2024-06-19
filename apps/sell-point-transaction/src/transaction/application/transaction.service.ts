@@ -1,21 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { Criteria, Filters, Order } from '@sell-point-transaction-share/domain/criteria';
 import { EFilter } from '@sell-point-transaction-share/domain/criteria/enum-filter';
-import { TransactionTypeRepository } from '@sell-point-transaction-type/domain/repository/transaction-type-repository.interface';
+import { TransactionTypeRepository } from '@sell-point-transaction-type/domain/repository/transaction-type.repository';
 import { EntityTransaction } from '../domain/entity/entity-transaction';
-import { TransactionRepository } from '../domain/repository/transaction-repository.interface';
+import { TransactionRepository } from '../domain/repository/transaction.repository';
 import { TransactionValue } from '../domain/value-object/transaction-value';
 import {
   FilterTransactionDto,
   TransactionCreateDto,
   TransactionUpdateDto,
 } from './dto/transaction.dto';
-import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class TransactionService {
   constructor(
-    @Inject('BALANCE_API') private balanceApi: ClientProxy,
+    @Inject('BALANCE_SERVICE') private balanceMicroservices: ClientKafka,
     private readonly transactionRepository: TransactionRepository,
     private readonly transactionTypeRepository: TransactionTypeRepository,
   ) {}
@@ -34,7 +34,7 @@ export class TransactionService {
 
     const newTransaction =
       await this.transactionRepository.createTransaction(newTransactionValue);
-    this.balanceApi.emit('update_balance', {
+    this.balanceMicroservices.emit('update_balance', {
       amount: newTransaction.transactionAmount,
       accountUuid: newTransaction.transactionAccountUuid,
     });

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Criteria } from '@sell-point-balance-share/domain/criteria';
 import { MySqlCriteriaConverter } from '@sell-point-balance-share/infrastructure/database/mysql/mysql-criteria-convertor';
-import { BalanceRepository } from '@sell-point-balance/domain/repository/balance.repository.interface';
+import { BalanceRepository } from '@sell-point-balance/domain/repository/balance.repository';
 import { BalanceValue } from '@sell-point-balance/domain/value-object/balance.value';
 import { Repository } from 'typeorm';
 import { BalanceEntity } from './entity/balance.entity';

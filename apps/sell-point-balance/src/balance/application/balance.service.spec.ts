@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EOrderTypes } from '@sell-point-balance-share/domain/criteria';
-import { BalanceRepository } from '../domain/repository/balance.repository.interface';
+import { BalanceRepository } from '../domain/repository/balance.repository';
 import { BalanceService } from './balance.service';
 import { FilterBalanceDto } from './dto/balance.dto';
 

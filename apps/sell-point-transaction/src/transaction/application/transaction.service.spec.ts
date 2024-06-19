@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TransactionTypeRepository } from '@sell-point-transaction-type/domain/repository/transaction-type-repository.interface';
+import { TransactionTypeRepository } from '@sell-point-transaction-type/domain/repository/transaction-type.repository';
 import { TransactionTypeEntity } from '@sell-point-transaction-type/infrastructure/database/mysql/entity/transaction-type.entity';
-import { TransactionRepository } from '../domain/repository/transaction-repository.interface';
+import { TransactionRepository } from '../domain/repository/transaction.repository';
 import { TransactionService } from './transaction.service';
 
 describe('TransactionService', () => {
@@ -36,7 +36,7 @@ describe('TransactionService', () => {
           },
         },
         {
-          provide: 'BALANCE_API',
+          provide: 'BALANCE_SERVICE',
           useValue: { emit: jest.fn() },
         },
       ],

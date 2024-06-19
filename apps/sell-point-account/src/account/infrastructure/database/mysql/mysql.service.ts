@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Criteria } from '@sell-point-account-share/domain/criteria';
 import { MySqlCriteriaConverter } from '@sell-point-account-share/infrastructure/database/mysql/mysql-criteria-convertor';
-import { AccountRepository } from '@sell-point-account/domain/repository/account.repository.interface';
+import { AccountRepository } from '@sell-point-account/domain/repository/account.repository';
 import { AccountValue } from '@sell-point-account/domain/value-object/account.value';
 import { Repository } from 'typeorm';
 import { AccountEntity } from './entity/account.entity';

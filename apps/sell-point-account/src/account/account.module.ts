@@ -1,29 +1,39 @@
 import { Module } from '@nestjs/common';
-import { ClientProxyFactory, Transport } from '@nestjs/microservices';
-import { AccountRepository } from '../account/domain/repository/account.repository.interface';
+import { ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AccountController } from './application/account.controller';
 import { AccountService } from './application/account.service';
+import { AccountRepository } from './domain/repository/account.repository';
 import { MysqlRepositoryModule } from './infrastructure/database/mysql/mysql-repository.module';
 import { MysqlService } from './infrastructure/database/mysql/mysql.service';
 
 @Module({
   imports: [
-    /* ClientsModule.register([
-      {
-        name: 'BALANCE_API',
-        transport: Transport.TCP,
-      },
-    ]), */
+    ClientsModule.registerAsync({
+      clients: [
+        {
+          name: 'BALANCE_SERVICE',
+          useFactory: (configService: ConfigService) => {
+            const broker = configService.get('KAFKA_BROKER');
+            const clientID = configService.get('BALANCE_ID');
+            const consumer = configService.get('BALANCE_CONSUMER');
+            return {
+              transport: Transport.KAFKA,
+              options: {
+                client: { brokers: [broker], clientId: clientID },
+                consumer: {
+                  groupId: consumer,
+                },
+              },
+            };
+          },
+          inject: [ConfigService],
+        },
+      ],
+    }),
     MysqlRepositoryModule,
   ],
   controllers: [AccountController],
-  providers: [
-    AccountService,
-    { provide: AccountRepository, useClass: MysqlService },
-    {
-      provide: 'BALANCE_API',
-      useFactory: () => ClientProxyFactory.create({ transport: Transport.TCP }),
-    },
-  ],
+  providers: [AccountService, { provide: AccountRepository, useClass: MysqlService }],
 })
 export class AccountModule {}

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EOrderTypes } from '@sell-point-transaction-share/domain/criteria';
-import { TransactionTypeRepository } from '../domain/repository/transaction-type-repository.interface';
+import { TransactionTypeRepository } from '../domain/repository/transaction-type.repository';
 import { FilterTransactionTypeDto } from './dto/transaction-type.dto';
 import { TransactionTypeService } from './transaction-type.service';
 

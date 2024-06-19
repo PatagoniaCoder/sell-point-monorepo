@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Criteria, Filters, Order } from '@sell-point-transaction-share/domain/criteria';
 import { EFilter } from '@sell-point-transaction-share/domain/criteria/enum-filter';
 import { EntityTransactionType } from '@sell-point-transaction-type/domain/entity/entity-transaction-type';
-import { TransactionTypeRepository } from '../domain/repository/transaction-type-repository.interface';
+import { TransactionTypeRepository } from '../domain/repository/transaction-type.repository';
 import { TransactionTypeValue } from '../domain/value-object/transaction-type-value';
 import {
   FilterTransactionTypeDto,

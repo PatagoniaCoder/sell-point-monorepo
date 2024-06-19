@@ -11,3 +11,4 @@ export * from './filters';
 export * from './order-type';
 export * from './filter';
 export * from './order-by';
+export * from './enum-filter';

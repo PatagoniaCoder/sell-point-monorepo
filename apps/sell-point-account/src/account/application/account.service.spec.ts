@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EOrderTypes } from '@sell-point-account-share/domain/criteria';
-import { AccountRepository } from '../domain/repository/account.repository.interface';
+import { AccountRepository } from '../domain/repository/account.repository';
 import { AccountService } from './account.service';
 import { FilterAccountDto } from './dto/account.dto';
 
@@ -14,7 +14,7 @@ describe('AccountService', () => {
         AccountService,
         { provide: AccountRepository, useValue: { findByCriteria: jest.fn() } },
         {
-          provide: 'BALANCE_API',
+          provide: 'BALANCE_SERVICE',
           useValue: jest.fn(),
         },
       ],

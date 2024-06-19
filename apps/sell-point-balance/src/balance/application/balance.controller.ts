@@ -37,8 +37,8 @@ export class BalanceController {
   }
 
   @EventPattern('register_account')
-  async createBalanceEvent(accountUuid: string): Promise<void> {
-    const balance = { accountUuid, amount: 0 };
+  async createBalanceEvent({ accountId }): Promise<void> {
+    const balance = { accountUuid: accountId, amount: 0 };
     await this.balanceService.createBalance(balance);
   }
 

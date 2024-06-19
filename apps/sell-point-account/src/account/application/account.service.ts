@@ -1,24 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { Criteria, Filters, Order } from '@sell-point-account-share/domain/criteria';
-import { EFilter } from '@sell-point-account-share/domain/criteria/enum-filter';
+import { ClientKafka } from '@nestjs/microservices';
+import { Criteria, EFilter, Filters, Order } from '@sell-point-account-share/domain/criteria';
+import { AccountCreateEvent } from '@sell-point-account/domain/events/account-created.event';
 import { EntityAccount } from '../domain/entity/entity-account';
-import { AccountRepository } from '../domain/repository/account.repository.interface';
+import { AccountRepository } from '../domain/repository/account.repository';
 import { AccountValue } from '../domain/value-object/account.value';
 import { AccountCreateDto, AccountUpdateDto, FilterAccountDto } from './dto/account.dto';
 
 @Injectable()
 export class AccountService {
   constructor(
-    @Inject('BALANCE_API') private balanceApi: ClientProxy,
+    @Inject('BALANCE_SERVICE') private balanceClient: ClientKafka,
     private readonly accountRepository: AccountRepository,
   ) {}
 
   async createAccount(account: AccountCreateDto): Promise<EntityAccount> {
     const { accountNumber, description } = account;
-    const newAccountValue = new AccountValue(accountNumber, description);
-    const newAccount = await this.accountRepository.createAccount(newAccountValue);
-    this.balanceApi.emit('register_account', newAccount.uuid);
+    const accountValue = new AccountValue(accountNumber, description);
+    const newAccount = await this.accountRepository.createAccount(accountValue);
+    this.balanceClient.emit('register_account', new AccountCreateEvent(newAccount.uuid));
 
     return newAccount;
   }

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Criteria } from '@sell-point-transaction-share/domain/criteria';
 import { MySqlCriteriaConverter } from '@sell-point-transaction-share/infrastructure/database/mysql/mysql-criteria-convertor';
 import { EntityTransaction } from '@sell-point-transaction/domain/entity/entity-transaction';
-import { TransactionRepository } from '@sell-point-transaction/domain/repository/transaction-repository.interface';
+import { TransactionRepository } from '@sell-point-transaction/domain/repository/transaction.repository';
 import { TransactionValue } from '@sell-point-transaction/domain/value-object/transaction-value';
 import { Repository } from 'typeorm';
 import { TransactionEntity } from './entity/transaction.entity';

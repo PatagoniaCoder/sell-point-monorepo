@@ -1,28 +1,45 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { SellPointAccountModule } from './sell-point-account.module';
+import { ExceptionFilter } from '@sell-point-account/application/filters/rpc-exception-filter';
+import { AllError } from '@sell-point-account/application/filters/all-error';
 
 async function bootstrap() {
-  const app = await NestFactory.create(SellPointAccountModule);
-  const port = Number(app.get(ConfigService).get('SELL_ACCOUNT_PORT'));
-  const logger = new Logger('SellPointAccount');
-  app.enableCors();
-  const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
-    .setVersion('1.0')
-    .addTag('cats')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  const appContext = await NestFactory.createApplicationContext(SellPointAccountModule);
+  const configService = appContext.get(ConfigService);
+  const broker = configService.get('KAFKA_BROKER');
+  const clientId = configService.get('ACCOUNT_ID');
+  const consumer = configService.get('ACCOUNT_CONSUMER');
+
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    SellPointAccountModule,
+    {
+      transport: Transport.KAFKA,
+      options: {
+        subscribe: { fromBeginning: true },
+        client: {
+          brokers: [broker],
+          clientId: clientId,
+        },
+        consumer: {
+          groupId: consumer,
+          allowAutoTopicCreation: true,
+        },
+      },
+    },
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
     }),
   );
 
-  await app.listen(port).then(() => logger.log(`SELL ACCOUNT run on port ${port}`));
+  app.useGlobalFilters(new ExceptionFilter(), new AllError());
+
+  const logger = new Logger('SellPointAccount');
+
+  await app.listen().then(() => logger.log(`START SELL ACCOUNT MICROSERVICE`));
 }
 bootstrap();

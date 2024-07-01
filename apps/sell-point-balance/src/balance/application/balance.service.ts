@@ -1,19 +1,43 @@
-import { Injectable } from '@nestjs/common';
-import { Criteria, Filters, Order } from '@sell-point-balance-share/domain/criteria';
-import { EFilter } from '@sell-point-balance-share/domain/criteria/enum-filter';
-import { EntityBalance } from '../domain/entity/entity-balance';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
+import { catchError, defer, retry, throwError } from 'rxjs';
 import { BalanceRepository } from '../domain/repository/balance.repository';
 import { BalanceValue } from '../domain/value-object/balance.value';
-import { BalanceCreateDto, BalanceUpdateDto, FilterBalanceDto } from './dto/balance.dto';
+import { BalanceCreateDto } from './dto/balance.dto';
+import { BalanceEventPattern } from '@sell-point-balance-share/infrastructure/event.pattern';
 
 @Injectable()
 export class BalanceService {
-  constructor(private readonly balanceRepository: BalanceRepository) {}
+  constructor(
+    @Inject('ACCOUNT_SERVICE') private readonly accountClient: ClientKafka,
+    private readonly balanceRepository: BalanceRepository,
+  ) {}
 
-  async createBalance(updateBalance: BalanceCreateDto): Promise<EntityBalance> {
-    const { accountUuid, amount } = updateBalance;
-    const newBalance = new BalanceValue(accountUuid, 0, amount, amount);
-    return await this.balanceRepository.createBalance(newBalance);
+  readonly logger = new Logger(BalanceService.name);
+
+  createBalance(payload: BalanceCreateDto): void {
+    const { value, key } = payload;
+    const newBalance = new BalanceValue(value.accountUuid, 0, 0, 0);
+    const balance$ = defer(() => this.balanceRepository.createBalance(newBalance)).pipe(
+      catchError((err) => {
+        return throwError(() => err);
+      }),
+      retry({ count: 5, delay: 5000 }),
+    );
+    balance$.subscribe({
+      next: () =>
+        this.accountClient.emit(BalanceEventPattern.CREATE_SUCCESS, {
+          key: key,
+          value,
+        }),
+      error: (err) => {
+        this.logger.error({ ...err });
+        this.accountClient.emit(BalanceEventPattern.CREATE_FAIL, {
+          key: key,
+          value,
+        });
+      },
+    });
   }
 
   async deleteBalance(uuid: string): Promise<void> {
@@ -21,7 +45,7 @@ export class BalanceService {
       throw new Error(err.message);
     });
   }
-
+  /* 
   async updateBalance(uuid: string, values: BalanceUpdateDto): Promise<EntityBalance> {
     const { accountUuid, amount } = values;
     const balance = await this.balanceRepository.findByUuid(uuid);
@@ -73,5 +97,5 @@ export class BalanceService {
     );
     const balance = await this.balanceRepository.findOneByCriteria(criteria);
     await this.updateBalance(balance.uuid, values);
-  }
+  } */
 }

@@ -8,10 +8,15 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { AccountService } from './account.service';
-import { FilterAccountDto, AccountCreateDto, AccountUpdateDto } from './dto/account.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { EntityAccount } from '../domain/entity/entity-account';
+import { AccountService } from './account.service';
+import {
+  AccountCreateDto,
+  AccountUpdateDto,
+  FilterAccountDto,
+  ResponseMessage,
+} from './dto/account.dto';
 
 @ApiTags('Account')
 @Controller('account')
@@ -31,7 +36,7 @@ export class AccountController {
   }
 
   @Post()
-  async createAccount(@Body() account: AccountCreateDto): Promise<EntityAccount> {
+  async createAccount(@Body() account: AccountCreateDto): Promise<ResponseMessage> {
     return await this.accountService.createAccount(account);
   }
 

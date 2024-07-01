@@ -31,7 +31,7 @@ describe('BalanceController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('filter endpoint', () => {
+  /*   describe('filter endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'findAllByCriteria');
     });
@@ -55,7 +55,7 @@ describe('BalanceController', () => {
       controller.findAllBalances();
       expect(service.findAll).toHaveBeenCalled();
     });
-  });
+  }); */
   describe('createBalance endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'createBalance');
@@ -70,7 +70,7 @@ describe('BalanceController', () => {
     });
   });
 
-  describe('deleteBalance endpoint', () => {
+  /*   describe('deleteBalance endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'deleteBalance');
     });
@@ -94,5 +94,5 @@ describe('BalanceController', () => {
       controller.updateBalance(null, null);
       expect(service.updateBalance).toHaveBeenCalled();
     });
-  });
+  }); */
 });

@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
 import { EOperator, EOrderTypes } from '@sell-point-balance-share/domain/criteria';
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsEnum, IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
 
 class StringValueObjectDto {
   @IsString()
@@ -66,11 +66,11 @@ export class FilterBalanceDto {
 }
 
 export class BalanceCreateDto {
-  @IsUUID()
-  accountUuid: string;
+  @IsString()
+  key: string;
 
-  @IsNumber()
-  amount: number;
+  @IsObject()
+  value: { accountUuid: string };
 }
 
 export class BalanceUpdateDto extends PartialType(BalanceCreateDto) {}

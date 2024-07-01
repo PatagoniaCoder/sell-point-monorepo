@@ -1,7 +1,6 @@
 import { BaseEntity } from '@sell-point-balance-share/infrastructure/database/mysql/entity/base-entity';
 import { EntityBalance } from '@sell-point-balance/domain/entity/entity-balance';
 import { Column, ColumnOptions, Entity } from 'typeorm';
-export class ColumnNumericTransformer {}
 const decimalColum: ColumnOptions = {
   type: 'decimal',
   nullable: false,

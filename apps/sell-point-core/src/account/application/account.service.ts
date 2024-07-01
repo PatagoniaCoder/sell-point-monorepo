@@ -1,19 +1,56 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleInit,
+} from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { Criteria, Filters, Order } from '@sell-point-core-share/domain/criteria';
 import { EFilter } from '@sell-point-core-share/domain/criteria/enum-filter';
+import { catchError, firstValueFrom, timeout } from 'rxjs';
 import { EntityAccount } from '../domain/entity/entity-account';
+import { CreateAccountEvent } from '../domain/events/create-account.events';
 import { AccountRepository } from '../domain/repository/account.repository.interface';
 import { AccountValue } from '../domain/value-object/account.value';
-import { AccountCreateDto, AccountUpdateDto, FilterAccountDto } from './dto/account.dto';
+import { AccountEventPattern } from '../shared/event.pattern';
+import {
+  AccountCreateDto,
+  AccountUpdateDto,
+  FilterAccountDto,
+  ResponseMessage,
+} from './dto/account.dto';
 
 @Injectable()
-export class AccountService {
-  constructor(private readonly accountRepository: AccountRepository) {}
+export class AccountService implements OnModuleInit {
+  constructor(
+    @Inject('ACCOUNT_SERVICE') private readonly accountMicroService: ClientKafka,
+    private readonly accountRepository: AccountRepository,
+  ) {}
+  readonly logger = new Logger(AccountService.name);
 
-  async createAccount(account: AccountCreateDto): Promise<EntityAccount> {
+  async onModuleInit() {
+    Object.values(AccountEventPattern).forEach((key) =>
+      this.accountMicroService.subscribeToResponseOf(key),
+    );
+    await this.accountMicroService.connect();
+  }
+
+  async createAccount(account: AccountCreateDto): Promise<ResponseMessage> {
     const { accountNumber, description } = account;
     const newAccount = new AccountValue(accountNumber, description);
-    return await this.accountRepository.createAccount(newAccount);
+    return await firstValueFrom(
+      this.accountMicroService
+        .send(AccountEventPattern.CREATE, new CreateAccountEvent(newAccount).toString())
+        .pipe(
+          timeout(5000),
+          catchError((err) => {
+            this.logger.error({ ...err });
+            throw new HttpException('Cant create an account', HttpStatus.BAD_REQUEST);
+          }),
+        ),
+    );
   }
 
   async deleteAccount(uuid: string): Promise<void> {
@@ -47,6 +84,6 @@ export class AccountService {
   }
 
   async findAll(): Promise<EntityAccount[]> {
-    return await this.accountRepository.findAllAccounts();
+    return await firstValueFrom(this.accountMicroService.send('account.findAll', {}));
   }
 }

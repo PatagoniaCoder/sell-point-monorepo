@@ -20,10 +20,15 @@ import { MysqlService } from './infrastructure/database/mysql/mysql.service';
             return {
               transport: Transport.KAFKA,
               options: {
-                client: { brokers: [broker], clientId: clientID },
+                client: {
+                  clientId: clientID,
+                  brokers: [broker],
+                },
                 consumer: {
                   groupId: consumer,
+                  retry: { retries: 4, initialRetryTime: 100 },
                 },
+                subscribe: { fromBeginning: true },
               },
             };
           },

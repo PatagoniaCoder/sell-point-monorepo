@@ -17,11 +17,8 @@ export class MysqlService extends MySqlCriteriaConverter implements AccountRepos
   }
 
   async createAccount(value: AccountValue): Promise<AccountEntity> {
-    return await this.accountRepository.manager.transaction(async (transaction) => {
-      const newAccount = this.accountRepository.create(value);
-      await transaction.save(newAccount);
-      return newAccount;
-    });
+    const newAccount = this.accountRepository.create(value);
+    return await this.accountRepository.save(newAccount);
   }
 
   async findAllAccounts(): Promise<AccountEntity[]> {

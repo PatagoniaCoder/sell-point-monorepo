@@ -1,14 +1,12 @@
-import { NestFactory } from '@nestjs/core';
-import { SellPointCoreModule } from './sell-point-core.module';
-import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { SellPointCoreModule } from './sell-point-core.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(SellPointCoreModule);
   const port = Number(app.get(ConfigService).get('SELL_CORE_PORT'));
-  const brokerKafka = app.get(ConfigService).get('KAFKA_BROKER');
   const logger = new Logger('SellPointCore');
   app.enableCors();
 
@@ -27,15 +25,6 @@ async function bootstrap() {
     }),
   );
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.KAFKA,
-    options: {
-      client: {
-        brokers: [brokerKafka],
-      },
-    },
-  });
-  await app.startAllMicroservices().then(() => logger.log(`START SELL CORE MICROSERVICE`));
   await app.listen(port).then(() => logger.log(`SELL CORE run on port ${port}`));
 }
 bootstrap();

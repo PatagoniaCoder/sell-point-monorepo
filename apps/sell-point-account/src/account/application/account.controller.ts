@@ -1,52 +1,62 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller } from '@nestjs/common';
+import { EventPattern, MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { EntityAccount } from '../domain/entity/entity-account';
 import { AccountService } from './account.service';
-import { AccountCreateDto, AccountUpdateDto, FilterAccountDto } from './dto/account.dto';
+import {
+  FilterAccountDto,
+  AccountCreateMessage,
+  AccountUpdateDto,
+  BalanceCreatedDto,
+  ResponseMessage,
+} from './dto/account.dto';
+import {
+  AccountEventPattern,
+  BalanceEventPattern,
+} from '@sell-point-account-share/infrastructure/event.pattern';
 
-@ApiTags('Account')
-@Controller('account')
+@Controller()
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
-  @Post('/filter')
+  @MessagePattern(AccountEventPattern.FILTER)
   async filter(@Body() filterAccount: FilterAccountDto): Promise<EntityAccount[]> {
-    return await this.accountService.findByCriteria(filterAccount).catch((err) => {
-      throw new BadRequestException('Something is wrong', err.message);
-    });
+    return await this.accountService.findByCriteria(filterAccount);
   }
 
-  @Get()
+  @MessagePattern(AccountEventPattern.FIND_ALL)
   async findAllAccounts(): Promise<EntityAccount[]> {
     return await this.accountService.findAll();
   }
 
-  @Post()
-  async createAccount(@Body() account: AccountCreateDto): Promise<EntityAccount> {
-    return await this.accountService.createAccount(account);
-  }
-
-  @Delete(':uuid')
-  async deleteAccount(@Param('uuid') uuid: string): Promise<void> {
-    return await this.accountService.deleteAccount(uuid).catch((err) => {
-      throw new BadRequestException('Something is wrong', err.message);
+  @MessagePattern(AccountEventPattern.CREATE)
+  async createAccountMessage(
+    @Payload() payload: AccountCreateMessage,
+  ): Promise<ResponseMessage> {
+    return await this.accountService.createAccount(payload).catch((err) => {
+      throw new RpcException(err);
     });
   }
 
-  @Patch(':uuid')
+  @MessagePattern(AccountEventPattern.DELETE)
+  async deleteAccount(@Payload() uuid: string): Promise<void> {
+    return await this.accountService.deleteAccount(uuid);
+  }
+
+  @MessagePattern(AccountEventPattern.UPDATE)
   async updateAccount(
-    @Param('uuid') uuid: string,
-    @Body() values: AccountUpdateDto,
+    @Payload() uuid: string,
+    @Payload() values: AccountUpdateDto,
   ): Promise<EntityAccount> {
     return await this.accountService.updateAccount(uuid, values);
+  }
+
+  @EventPattern(BalanceEventPattern.CREATE_SUCCESS)
+  async balanceCreated(payload: BalanceCreatedDto): Promise<void> {
+    await this.accountService.balanceCreated(payload);
+  }
+
+  @EventPattern(BalanceEventPattern.CREATE_FAIL)
+  async balanceCreatedError(payload: BalanceCreatedDto): Promise<void> {
+    await this.accountService.balanceCreatedError(payload);
   }
 }

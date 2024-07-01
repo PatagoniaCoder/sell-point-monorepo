@@ -1,11 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { Criteria, EFilter, Filters, Order } from '@sell-point-account-share/domain/criteria';
-import { AccountCreateEvent } from '@sell-point-account/domain/events/account-created.event';
-import { EntityAccount } from '../domain/entity/entity-account';
+import { BalanceEventPattern } from '@sell-point-account-share/infrastructure/event.pattern';
+import { BalanceAccountCreateEvent } from '@sell-point-account/domain/events/balance-account-create.event';
+import { AccountStatus, EntityAccount } from '../domain/entity/entity-account';
 import { AccountRepository } from '../domain/repository/account.repository';
 import { AccountValue } from '../domain/value-object/account.value';
-import { AccountCreateDto, AccountUpdateDto, FilterAccountDto } from './dto/account.dto';
+import {
+  AccountCreateMessage,
+  AccountUpdateDto,
+  BalanceCreatedDto,
+  FilterAccountDto,
+  ResponseMessage,
+} from './dto/account.dto';
 
 @Injectable()
 export class AccountService {
@@ -14,13 +21,16 @@ export class AccountService {
     private readonly accountRepository: AccountRepository,
   ) {}
 
-  async createAccount(account: AccountCreateDto): Promise<EntityAccount> {
-    const { accountNumber, description } = account;
-    const accountValue = new AccountValue(accountNumber, description);
-    const newAccount = await this.accountRepository.createAccount(accountValue);
-    this.balanceClient.emit('register_account', new AccountCreateEvent(newAccount.uuid));
+  async createAccount(payload: AccountCreateMessage): Promise<ResponseMessage> {
+    const { key, value } = payload;
+    const accountValue = new AccountValue(value.accountNumber, value.description, key);
+    await this.accountRepository.createAccount(accountValue);
+    this.balanceClient.emit(
+      BalanceEventPattern.ACCOUNT_CREATED,
+      new BalanceAccountCreateEvent(accountValue).toString(),
+    );
 
-    return newAccount;
+    return { key, value: accountValue };
   }
 
   async deleteAccount(uuid: string): Promise<void> {
@@ -55,5 +65,18 @@ export class AccountService {
 
   async findAll(): Promise<EntityAccount[]> {
     return await this.accountRepository.findAllAccounts();
+  }
+
+  async balanceCreated(payload: BalanceCreatedDto) {
+    await this.accountRepository.updateAccount(payload.value.accountUuid, {
+      status: AccountStatus.CREATED,
+    });
+  }
+
+  async balanceCreatedError(payload: BalanceCreatedDto): Promise<void> {
+    console.log('leego el id', payload.value.accountUuid);
+    await this.accountRepository.updateAccount(payload.value.accountUuid, {
+      status: AccountStatus.CANCELED,
+    });
   }
 }

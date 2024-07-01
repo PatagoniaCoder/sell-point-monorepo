@@ -1,7 +1,8 @@
 import { PartialType } from '@nestjs/swagger';
 import { EOperator, EOrderTypes } from '@sell-point-core-share/domain/criteria';
+import { EntityAccount } from '@sell-point-core/account/domain/entity/entity-account';
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsEnum, IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
 
 class StringValueObjectDto {
   @IsString()
@@ -71,3 +72,13 @@ export class AccountCreateDto {
 }
 
 export class AccountUpdateDto extends PartialType(AccountCreateDto) {}
+
+export class ResponseMessage {
+  @IsString()
+  key: string;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => EntityAccount)
+  value: EntityAccount;
+}

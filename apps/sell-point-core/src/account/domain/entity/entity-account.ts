@@ -1,7 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EntityBase } from '@sell-point-core-share/domain/entity/entity-base';
-import { EntityTransaction } from '@sell-point-core-transaction/domain/entity/entity-transaction';
-
+export enum AccountStatus {
+  PENDING = 'PENDING',
+  CREATED = 'CREATED',
+  CANCELED = 'CANCELED',
+}
 export abstract class EntityAccount extends EntityBase {
   @ApiProperty()
   uuid: string;
@@ -12,5 +15,6 @@ export abstract class EntityAccount extends EntityBase {
   @ApiProperty()
   description: string;
 
-  accountTransactions: EntityTransaction[];
+  @ApiProperty()
+  status: AccountStatus;
 }

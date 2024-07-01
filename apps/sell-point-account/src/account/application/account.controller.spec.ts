@@ -61,11 +61,11 @@ describe('AccountController', () => {
       jest.spyOn(service, 'createAccount');
     });
     it('should createAccount be defined', () => {
-      expect(controller.createAccount).toBeDefined();
+      expect(controller.createAccountMessage).toBeDefined();
     });
 
     it('should createAccount have been called', () => {
-      controller.createAccount(null);
+      controller.createAccountMessage(null);
       expect(service.createAccount).toHaveBeenCalled();
     });
   });

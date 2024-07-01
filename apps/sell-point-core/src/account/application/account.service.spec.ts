@@ -12,6 +12,7 @@ describe('AccountService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AccountService,
+        { provide: 'ACCOUNT_SERVICE', useValue: {} },
         { provide: AccountRepository, useValue: { findByCriteria: jest.fn() } },
       ],
     }).compile();

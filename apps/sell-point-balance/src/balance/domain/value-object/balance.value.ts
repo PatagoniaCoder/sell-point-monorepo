@@ -21,4 +21,12 @@ export class BalanceValue implements EntityBalance {
     this.balanceAmountAfter = new DecimalValueObject(balanceAmountAfter).value;
     this.amount = new DecimalValueObject(amount).value;
   }
+  toString() {
+    return JSON.stringify({
+      accountUuid: this.accountUuid,
+      balanceAmountBefore: this.balanceAmountBefore,
+      balanceAmountAfter: this.balanceAmountAfter,
+      amount: this.amount,
+    });
+  }
 }

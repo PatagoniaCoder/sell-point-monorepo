@@ -11,9 +11,10 @@ import { AccountRepository } from './domain/repository/account.repository.interf
       clients: [
         {
           name: 'ACCOUNT_SERVICE',
-          useFactory: (configService: ConfigService) => {
+          useFactory: async (configService: ConfigService) => {
             const broker = configService.get('KAFKA_BROKER');
             const clientID = configService.get('ACCOUNT_ID');
+            const consumer = configService.get('ACCOUNT_CONSUMER');
             return {
               transport: Transport.KAFKA,
               options: {
@@ -22,6 +23,7 @@ import { AccountRepository } from './domain/repository/account.repository.interf
                   allowAutoTopicCreation: true,
                   retry: { retries: 3, initialRetryTime: 100 },
                 },
+                consumer: { groupId: consumer },
                 subscribe: { fromBeginning: true },
               },
             };

@@ -24,6 +24,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.enableShutdownHooks();
 
   await app.listen(port).then(() => logger.log(`SELL CORE run on port ${port}`));
 }

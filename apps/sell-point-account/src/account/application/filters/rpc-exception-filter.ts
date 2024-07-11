@@ -1,14 +1,12 @@
-import { Catch, RpcExceptionFilter, ArgumentsHost } from '@nestjs/common';
+import { BadRequestException, Catch, RpcExceptionFilter } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { Observable, throwError } from 'rxjs';
-import { KafkaContext, RpcException } from '@nestjs/microservices';
 
 @Catch(RpcException)
 export class ExceptionFilter implements RpcExceptionFilter<RpcException> {
-  catch(exception: RpcException, host: ArgumentsHost): Observable<any> {
-    const kafkaContext: KafkaContext = host.getArgs()[1];
-    return throwError(() => ({
-      kafkaHeaders: kafkaContext.getMessage().headers,
-      error: exception.getError(),
-    }));
+  catch(exception: RpcException): Observable<any> {
+    return throwError(() => {
+      throw new BadRequestException(exception.getError());
+    });
   }
 }

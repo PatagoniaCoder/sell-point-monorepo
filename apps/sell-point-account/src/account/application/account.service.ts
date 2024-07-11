@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { Criteria, EFilter, Filters, Order } from '@sell-point-account-share/domain/criteria';
 import { BalanceEventPattern } from '@sell-point-account-share/infrastructure/event.pattern';
@@ -15,11 +15,15 @@ import {
 } from './dto/account.dto';
 
 @Injectable()
-export class AccountService {
+export class AccountService implements OnModuleDestroy {
   constructor(
     @Inject('BALANCE_SERVICE') private balanceClient: ClientKafka,
     private readonly accountRepository: AccountRepository,
   ) {}
+
+  async onModuleDestroy() {
+    await this.balanceClient.close();
+  }
 
   async createAccount(payload: AccountCreateMessage): Promise<ResponseMessage> {
     const { key, value } = payload;

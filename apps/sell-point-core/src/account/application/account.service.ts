@@ -1,4 +1,5 @@
 import {
+  BeforeApplicationShutdown,
   HttpException,
   HttpStatus,
   Inject,
@@ -9,7 +10,7 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 import { Criteria, Filters, Order } from '@sell-point-core-share/domain/criteria';
 import { EFilter } from '@sell-point-core-share/domain/criteria/enum-filter';
-import { catchError, firstValueFrom, timeout } from 'rxjs';
+import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
 import { EntityAccount } from '../domain/entity/entity-account';
 import { CreateAccountEvent } from '../domain/events/create-account.events';
 import { AccountRepository } from '../domain/repository/account.repository.interface';
@@ -23,11 +24,12 @@ import {
 } from './dto/account.dto';
 
 @Injectable()
-export class AccountService implements OnModuleInit {
+export class AccountService implements OnModuleInit, BeforeApplicationShutdown {
   constructor(
     @Inject('ACCOUNT_SERVICE') private readonly accountMicroService: ClientKafka,
     private readonly accountRepository: AccountRepository,
   ) {}
+
   readonly logger = new Logger(AccountService.name);
 
   async onModuleInit() {
@@ -35,6 +37,10 @@ export class AccountService implements OnModuleInit {
       this.accountMicroService.subscribeToResponseOf(key),
     );
     await this.accountMicroService.connect();
+  }
+
+  async beforeApplicationShutdown() {
+    await this.accountMicroService.close();
   }
 
   async createAccount(account: AccountCreateDto): Promise<ResponseMessage> {
@@ -46,8 +52,10 @@ export class AccountService implements OnModuleInit {
         .pipe(
           timeout(5000),
           catchError((err) => {
-            this.logger.error({ ...err });
-            throw new HttpException('Cant create an account', HttpStatus.BAD_REQUEST);
+            this.logger.error(err);
+            return throwError(
+              () => new HttpException('Cant create an account', HttpStatus.BAD_REQUEST),
+            );
           }),
         ),
     );

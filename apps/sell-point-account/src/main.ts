@@ -2,9 +2,8 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { SellPointAccountModule } from './sell-point-account.module';
 import { ExceptionFilter } from '@sell-point-account/application/filters/rpc-exception-filter';
-import { AllError } from '@sell-point-account/application/filters/all-error';
+import { SellPointAccountModule } from './sell-point-account.module';
 
 async function bootstrap() {
   const appContext = await NestFactory.createApplicationContext(SellPointAccountModule);
@@ -36,9 +35,11 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(new ExceptionFilter(), new AllError());
+  app.useGlobalFilters(new ExceptionFilter());
 
   const logger = new Logger('SellPointAccount');
+
+  app.enableShutdownHooks();
 
   await app.listen().then(() => logger.log(`START SELL ACCOUNT MICROSERVICE`));
 }

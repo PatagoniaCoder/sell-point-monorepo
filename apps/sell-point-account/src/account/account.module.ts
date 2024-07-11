@@ -13,7 +13,7 @@ import { MysqlService } from './infrastructure/database/mysql/mysql.service';
       clients: [
         {
           name: 'BALANCE_SERVICE',
-          useFactory: (configService: ConfigService) => {
+          useFactory: async (configService: ConfigService) => {
             const broker = configService.get('KAFKA_BROKER');
             const clientID = configService.get('BALANCE_ID');
             return {

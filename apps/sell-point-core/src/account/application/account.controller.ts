@@ -37,7 +37,9 @@ export class AccountController {
 
   @Post()
   async createAccount(@Body() account: AccountCreateDto): Promise<ResponseMessage> {
-    return await this.accountService.createAccount(account);
+    return await this.accountService.createAccount(account).catch((err) => {
+      throw new BadRequestException('Something is wrong', err.message);
+    });
   }
 
   @Delete(':uuid')

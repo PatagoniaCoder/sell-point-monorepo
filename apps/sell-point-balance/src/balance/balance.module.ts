@@ -14,7 +14,7 @@ import { ConfigService } from '@nestjs/config';
         {
           name: 'ACCOUNT_SERVICE',
           inject: [ConfigService],
-          useFactory: (configService: ConfigService) => {
+          useFactory: async (configService: ConfigService) => {
             const broker = configService.get('KAFKA_BROKER');
             const clientID = configService.get('ACCOUNT_ID');
             return {

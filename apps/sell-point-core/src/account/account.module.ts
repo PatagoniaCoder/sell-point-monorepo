@@ -14,13 +14,12 @@ import { AccountRepository } from './domain/repository/account.repository.interf
           useFactory: (configService: ConfigService) => {
             const broker = configService.get('KAFKA_BROKER');
             const clientID = configService.get('ACCOUNT_ID');
-            const consumer = configService.get('ACCOUNT_CONSUMER');
             return {
               transport: Transport.KAFKA,
               options: {
                 client: { brokers: [broker], clientId: clientID },
-                consumer: {
-                  groupId: consumer,
+                producer: {
+                  allowAutoTopicCreation: true,
                   retry: { retries: 3, initialRetryTime: 100 },
                 },
                 subscribe: { fromBeginning: true },

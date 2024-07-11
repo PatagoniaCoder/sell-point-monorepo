@@ -23,15 +23,22 @@ async function bootstrap() {
         client: {
           brokers: [broker],
           clientId: clientId,
+          retry: { retries: 4 },
         },
         consumer: {
           groupId: consumer,
-          allowAutoTopicCreation: true,
+          retry: {
+            retries: 5,
+            initialRetryTime: 100,
+            multiplier: 1.5,
+            maxRetryTime: 5000,
+            restartOnFailure: () => Promise.resolve(false),
+          },
+          readUncommitted: true,
         },
       },
     },
   );
-
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

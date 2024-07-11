@@ -8,6 +8,7 @@ import { BalanceCreateDto } from './dto/balance.dto';
 //import { FilterBalanceDto } from './dto/balance.dto';
 import { BalanceAccountCreateEvent } from '@sell-point-balance/domain/events/balance-account-create.event';
 import { v4 as uuid4 } from 'uuid';
+import { BalanceEventPattern } from '@sell-point-balance-share/infrastructure/event.pattern';
 jest.mock('uuid', () => ({
   v4: jest.fn().mockReturnValue('7907fba0-fe38-4c61-84ba-1c6b9b2ee6e9'),
 }));
@@ -54,6 +55,53 @@ describe('BalanceService', () => {
     accountClient; //delete
     balanceMessageMock; //delete
     expect(service).toBeDefined();
+  });
+
+  describe('Should create an balance', () => {
+    beforeEach(async () => {
+      jest.spyOn(accountClient, 'emit');
+      jest.spyOn(repository, 'createBalance').mockResolvedValue(null);
+      await service.createBalance(payload);
+    });
+
+    it('should have been called "balanceRepository.createBalance"', async () => {
+      expect(repository.createBalance).toHaveBeenCalledWith(balanceMock);
+    });
+
+    it('should have been called "accountClient.emit"', () => {
+      expect(accountClient.emit).toHaveBeenCalledWith(
+        BalanceEventPattern.CREATE_SUCCESS,
+        JSON.stringify({
+          key: payload.key,
+          value: payload.value,
+        }),
+      );
+    });
+  });
+
+  describe('Should fail on create an balance', () => {
+    beforeEach(async () => {
+      jest.spyOn(accountClient, 'emit');
+      jest
+        .spyOn(repository, 'createBalance')
+        .mockRejectedValue(new Error('Something wrong!!'));
+      jest.spyOn(service.logger, 'error');
+      await service.createBalance(payload);
+    });
+
+    it('should fail on createAccount logger have been called', async () => {
+      expect(service.logger.error).toHaveBeenCalled();
+    });
+
+    it("shouldn't have been called 'accountClient.emit'", () => {
+      expect(accountClient.emit).toHaveBeenCalledWith(
+        BalanceEventPattern.CREATE_FAIL,
+        JSON.stringify({
+          key: payload.key,
+          value: payload.value,
+        }),
+      );
+    });
   });
 });
 

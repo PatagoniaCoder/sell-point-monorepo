@@ -21,6 +21,11 @@ describe('AccountService', () => {
     value: { accountNumber: '00001', description: 'Mock of account' },
   };
 
+  const balanceMock = {
+    key: accountDtoMock.key,
+    value: { accountUuid: 'key' },
+  };
+
   const accountMock = {
     accountNumber: accountDtoMock.value.accountNumber,
     description: accountDtoMock.value.description,
@@ -28,6 +33,7 @@ describe('AccountService', () => {
     uuid: uuid4(),
     key: accountDtoMock.key,
   };
+
   const accountMessageMock = new BalanceAccountCreateEvent(accountMock);
 
   beforeEach(async () => {
@@ -36,7 +42,11 @@ describe('AccountService', () => {
         AccountService,
         {
           provide: AccountRepository,
-          useValue: { findByCriteria: jest.fn(), createAccount: jest.fn() },
+          useValue: {
+            findByCriteria: jest.fn(),
+            createAccount: jest.fn(),
+            updateAccount: jest.fn(),
+          },
         },
         {
           provide: 'BALANCE_SERVICE',
@@ -94,6 +104,32 @@ describe('AccountService', () => {
 
     it("shouldn't have been called 'balanceClient.emit'", () => {
       expect(balanceClient.emit).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Should update account on balance create success', () => {
+    it('should balanceCreatedSuccess be defined', () => {
+      expect(service.balanceCreatedSuccess).toBeDefined();
+    });
+
+    it('should accountRepository.updateAccount have been called', async () => {
+      await service.balanceCreatedSuccess(balanceMock);
+      expect(repository.updateAccount).toHaveBeenCalledWith(balanceMock.value.accountUuid, {
+        status: AccountStatus.CREATED,
+      });
+    });
+  });
+
+  describe('Should update account on balance create fails', () => {
+    it('should balanceCreatedFails be defined', () => {
+      expect(service.balanceCreatedFails).toBeDefined();
+    });
+
+    it('should accountRepository.updateAccount have been called', async () => {
+      await service.balanceCreatedFails(balanceMock);
+      expect(repository.updateAccount).toHaveBeenCalledWith(balanceMock.value.accountUuid, {
+        status: AccountStatus.CANCELED,
+      });
     });
   });
 

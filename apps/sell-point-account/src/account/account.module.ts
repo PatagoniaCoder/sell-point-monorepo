@@ -16,7 +16,6 @@ import { MysqlService } from './infrastructure/database/mysql/mysql.service';
           useFactory: (configService: ConfigService) => {
             const broker = configService.get('KAFKA_BROKER');
             const clientID = configService.get('BALANCE_ID');
-            const consumer = configService.get('BALANCE_CONSUMER');
             return {
               transport: Transport.KAFKA,
               options: {
@@ -24,10 +23,8 @@ import { MysqlService } from './infrastructure/database/mysql/mysql.service';
                   clientId: clientID,
                   brokers: [broker],
                 },
-                consumer: {
-                  groupId: consumer,
-                  retry: { retries: 4, initialRetryTime: 100 },
-                },
+
+                producer: { allowAutoTopicCreation: true },
                 subscribe: { fromBeginning: true },
               },
             };

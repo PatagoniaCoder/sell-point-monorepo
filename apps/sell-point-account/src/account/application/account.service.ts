@@ -67,14 +67,13 @@ export class AccountService {
     return await this.accountRepository.findAllAccounts();
   }
 
-  async balanceCreated(payload: BalanceCreatedDto) {
+  async balanceCreatedSuccess(payload: BalanceCreatedDto) {
     await this.accountRepository.updateAccount(payload.value.accountUuid, {
       status: AccountStatus.CREATED,
     });
   }
 
-  async balanceCreatedError(payload: BalanceCreatedDto): Promise<void> {
-    console.log('leego el id', payload.value.accountUuid);
+  async balanceCreatedFails(payload: BalanceCreatedDto): Promise<void> {
     await this.accountRepository.updateAccount(payload.value.accountUuid, {
       status: AccountStatus.CANCELED,
     });

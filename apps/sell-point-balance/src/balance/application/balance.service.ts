@@ -1,10 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { catchError, defer, retry, throwError } from 'rxjs';
+import { BalanceEventPattern } from '@sell-point-balance-share/infrastructure/event.pattern';
 import { BalanceRepository } from '../domain/repository/balance.repository';
 import { BalanceValue } from '../domain/value-object/balance.value';
 import { BalanceCreateDto } from './dto/balance.dto';
-import { BalanceEventPattern } from '@sell-point-balance-share/infrastructure/event.pattern';
 
 @Injectable()
 export class BalanceService {
@@ -15,29 +14,26 @@ export class BalanceService {
 
   readonly logger = new Logger(BalanceService.name);
 
-  createBalance(payload: BalanceCreateDto): void {
+  async createBalance(payload: BalanceCreateDto): Promise<void> {
     const { value, key } = payload;
-    const newBalance = new BalanceValue(value.accountUuid, 0, 0, 0);
-    const balance$ = defer(() => this.balanceRepository.createBalance(newBalance)).pipe(
-      catchError((err) => {
-        return throwError(() => err);
-      }),
-      retry({ count: 5, delay: 5000 }),
-    );
-    balance$.subscribe({
-      next: () =>
-        this.accountClient.emit(BalanceEventPattern.CREATE_SUCCESS, {
-          key: key,
-          value,
+    const newBalance = new BalanceValue(value.accountUuid, 0, 0, 0, key);
+    await this.balanceRepository.createBalance(newBalance).catch((err) => {
+      this.logger.error(err);
+      this.accountClient.emit(
+        BalanceEventPattern.CREATE_FAIL,
+        JSON.stringify({
+          key: payload.key,
+          value: payload.value,
         }),
-      error: (err) => {
-        this.logger.error({ ...err });
-        this.accountClient.emit(BalanceEventPattern.CREATE_FAIL, {
-          key: key,
-          value,
-        });
-      },
+      );
     });
+    this.accountClient.emit(
+      BalanceEventPattern.CREATE_SUCCESS,
+      JSON.stringify({
+        key: key,
+        value,
+      }),
+    );
   }
 
   async deleteBalance(uuid: string): Promise<void> {

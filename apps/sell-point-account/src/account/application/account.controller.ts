@@ -1,4 +1,4 @@
-import { Body, Controller } from '@nestjs/common';
+import { Body, Controller, Logger } from '@nestjs/common';
 import { EventPattern, MessagePattern, Payload, RpcException } from '@nestjs/microservices';
 import { EntityAccount } from '../domain/entity/entity-account';
 import { AccountService } from './account.service';
@@ -16,6 +16,7 @@ import {
 
 @Controller()
 export class AccountController {
+  logger = new Logger(AccountController.name);
   constructor(private readonly accountService: AccountService) {}
 
   @MessagePattern(AccountEventPattern.FILTER)
@@ -33,6 +34,7 @@ export class AccountController {
     @Payload() payload: AccountCreateMessage,
   ): Promise<ResponseMessage> {
     return await this.accountService.createAccount(payload).catch((err) => {
+      this.logger.error(err);
       throw new RpcException(err);
     });
   }
@@ -52,11 +54,11 @@ export class AccountController {
 
   @EventPattern(BalanceEventPattern.CREATE_SUCCESS)
   async balanceCreated(payload: BalanceCreatedDto): Promise<void> {
-    await this.accountService.balanceCreated(payload);
+    await this.accountService.balanceCreatedSuccess(payload);
   }
 
   @EventPattern(BalanceEventPattern.CREATE_FAIL)
-  async balanceCreatedError(payload: BalanceCreatedDto): Promise<void> {
-    await this.accountService.balanceCreatedError(payload);
+  async balanceCreatedFails(payload: BalanceCreatedDto): Promise<void> {
+    await this.accountService.balanceCreatedFails(payload);
   }
 }

@@ -22,6 +22,8 @@ describe('AccountController', () => {
             createAccount: jest.fn().mockResolvedValue({}),
             updateAccount: jest.fn().mockResolvedValue({}),
             deleteAccount: jest.fn().mockResolvedValue({}),
+            balanceCreatedSuccess: jest.fn().mockResolvedValue({}),
+            balanceCreatedFails: jest.fn().mockResolvedValue({}),
           },
         },
       ],
@@ -65,7 +67,7 @@ describe('AccountController', () => {
   describe('createAccountMessage endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'createAccount');
-      //jest.spyOn(controller.logger, 'error');
+      jest.spyOn(controller.logger, 'error');
     });
 
     it('should createAccountMessage be defined', () => {
@@ -84,14 +86,14 @@ describe('AccountController', () => {
       });
     });
 
-    /* it('should fail on createAccount logger have been called', async () => {
+    it('should fail on createAccount logger have been called', async () => {
       jest
         .spyOn(service, 'createAccount')
         .mockRejectedValueOnce(new Error('Something is wrong!'));
       await controller.createAccountMessage(payload).catch(() => {
         expect(controller.logger.error).toHaveBeenCalled();
       });
-    }); */
+    });
   });
 
   describe('deleteAccount endpoint', () => {
@@ -118,6 +120,45 @@ describe('AccountController', () => {
     it('should updateAccount have been called', () => {
       controller.updateAccount(null, null);
       expect(service.updateAccount).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateAccount endpoint', () => {
+    beforeEach(() => {
+      jest.spyOn(service, 'updateAccount');
+    });
+    it('should updateAccount be defined', () => {
+      expect(controller.updateAccount).toBeDefined();
+    });
+    it('should updateAccount have been called', () => {
+      controller.updateAccount(null, null);
+      expect(service.updateAccount).toHaveBeenCalled();
+    });
+  });
+
+  describe('balanceCreated endpoint', () => {
+    beforeEach(() => {
+      jest.spyOn(service, 'balanceCreatedSuccess');
+    });
+    it('should balanceCreated be defined', () => {
+      expect(controller.balanceCreated).toBeDefined();
+    });
+    it('should balanceCreated have been called', () => {
+      controller.balanceCreated(null);
+      expect(service.balanceCreatedSuccess).toHaveBeenCalled();
+    });
+  });
+
+  describe('balanceCreatedFails endpoint', () => {
+    beforeEach(() => {
+      jest.spyOn(service, 'balanceCreatedFails');
+    });
+    it('should balanceCreatedFails be defined', () => {
+      expect(controller.balanceCreated).toBeDefined();
+    });
+    it('should balanceCreatedFails have been called', () => {
+      controller.balanceCreatedFails(null);
+      expect(service.balanceCreatedFails).toHaveBeenCalled();
     });
   });
 });

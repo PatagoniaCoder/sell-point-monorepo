@@ -8,18 +8,21 @@ export class BalanceValue implements EntityBalance {
   balanceAmountBefore: number;
   balanceAmountAfter: number;
   amount: number;
+  key: string;
 
   constructor(
     accountUuid: string,
     balanceAmountBefore: number,
     balanceAmountAfter: number,
     amount: number,
+    key: string,
   ) {
     this.uuid = uuid4();
     this.accountUuid = accountUuid;
     this.balanceAmountBefore = new DecimalValueObject(balanceAmountBefore).value;
     this.balanceAmountAfter = new DecimalValueObject(balanceAmountAfter).value;
     this.amount = new DecimalValueObject(amount).value;
+    this.key = key;
   }
   toString() {
     return JSON.stringify({

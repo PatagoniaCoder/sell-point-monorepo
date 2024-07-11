@@ -17,13 +17,11 @@ import { ConfigService } from '@nestjs/config';
           useFactory: (configService: ConfigService) => {
             const broker = configService.get('KAFKA_BROKER');
             const clientID = configService.get('ACCOUNT_ID');
-            const consumer = configService.get('ACCOUNT_CONSUMER');
             return {
               transport: Transport.KAFKA,
               options: {
                 client: { brokers: [broker], clientId: clientID },
-                consumer: {
-                  groupId: consumer,
+                producer: {
                   retry: {
                     initialRetryTime: 100,
                     retries: 5,

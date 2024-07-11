@@ -1,11 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BalanceController } from './balance.controller';
 import { BalanceService } from './balance.service';
+import { BalanceCreateDto } from './dto/balance.dto';
 
 describe('BalanceController', () => {
   let controller: BalanceController;
   let service: BalanceService;
-
+  const payload = new BalanceCreateDto();
+  payload.key = '123456-123456';
+  payload.value = { accountUuid: '123456-123456' };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [BalanceController],
@@ -29,6 +32,21 @@ describe('BalanceController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  describe('createBalanceEvent endpoint', () => {
+    beforeEach(() => {
+      jest.spyOn(service, 'createBalance');
+    });
+
+    it('should createBalanceEvent be defined', () => {
+      expect(controller.createBalanceEvent).toBeDefined();
+    });
+
+    it('should createBalance have been called', () => {
+      controller.createBalanceEvent(payload);
+      expect(service.createBalance).toHaveBeenCalledWith(payload);
+    });
   });
 
   /*   describe('filter endpoint', () => {
@@ -56,19 +74,6 @@ describe('BalanceController', () => {
       expect(service.findAll).toHaveBeenCalled();
     });
   }); */
-  describe('createBalance endpoint', () => {
-    beforeEach(() => {
-      jest.spyOn(service, 'createBalance');
-    });
-    it('should createBalance be defined', () => {
-      expect(controller.createBalance).toBeDefined();
-    });
-
-    it('should createBalance have been called', () => {
-      controller.createBalance(null);
-      expect(service.createBalance).toHaveBeenCalled();
-    });
-  });
 
   /*   describe('deleteBalance endpoint', () => {
     beforeEach(() => {

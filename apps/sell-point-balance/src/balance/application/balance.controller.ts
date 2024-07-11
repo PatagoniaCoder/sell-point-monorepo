@@ -11,7 +11,7 @@ export class BalanceController {
   constructor(private readonly balanceService: BalanceService) {}
 
   @EventPattern(BalanceEventPattern.ACCOUNT_CREATED)
-  createBalance(payload: BalanceCreateDto): void {
+  createBalanceEvent(payload: BalanceCreateDto): void {
     this.balanceService.createBalance(payload);
   }
 }

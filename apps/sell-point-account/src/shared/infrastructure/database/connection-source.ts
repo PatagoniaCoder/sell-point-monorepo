@@ -12,7 +12,7 @@ export const connectionSource = new DataSource({
   database: process.env.MYSQL_DATABASE_ACCOUNT_NAME,
   synchronize: false,
   logging: false,
-  migrations: [join(__dirname, '../migrations/*.ts')],
-  entities: [join(__dirname, '../**/**/**/*.entity.ts')],
+  migrations: [join(__dirname, '../../../migrations/*.ts')],
+  entities: [join(__dirname, '../../../**/**/**/*.entity.ts')],
   migrationsRun: true,
 });

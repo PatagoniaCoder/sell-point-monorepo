@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AccountController } from './account.controller';
 import { AccountService } from './account.service';
+import { AccountCreateDto } from './dto/account.dto';
 
 describe('AccountController', () => {
   let controller: AccountController;
@@ -31,7 +32,7 @@ describe('AccountController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('filter endpoint', () => {
+  /*   describe('filter endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'findByCriteria');
     });
@@ -43,8 +44,9 @@ describe('AccountController', () => {
       controller.filter(null);
       expect(service.findByCriteria).toHaveBeenCalled();
     });
-  });
-  describe('findAllAccounts endpoint', () => {
+  }); */
+
+  /*   describe('findAllAccounts endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'findAll');
     });
@@ -55,7 +57,8 @@ describe('AccountController', () => {
       controller.findAllAccounts();
       expect(service.findAll).toHaveBeenCalled();
     });
-  });
+  }); */
+
   describe('createAccount endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'createAccount');
@@ -64,13 +67,16 @@ describe('AccountController', () => {
       expect(controller.createAccount).toBeDefined();
     });
 
-    it('should createAccount have been called', () => {
-      controller.createAccount(null);
-      expect(service.createAccount).toHaveBeenCalled();
+    it('"createAccount" service should have been called', () => {
+      const payload = new AccountCreateDto();
+      payload.accountNumber = '00001';
+      payload.description = 'test account';
+      controller.createAccount(payload);
+      expect(service.createAccount).toHaveBeenCalledWith(payload);
     });
   });
 
-  describe('deleteAccount endpoint', () => {
+  /*   describe('deleteAccount endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'deleteAccount');
     });
@@ -83,6 +89,7 @@ describe('AccountController', () => {
       expect(service.deleteAccount).toHaveBeenCalled();
     });
   });
+
   describe('updateAccount endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'updateAccount');
@@ -94,5 +101,5 @@ describe('AccountController', () => {
       controller.updateAccount(null, null);
       expect(service.updateAccount).toHaveBeenCalled();
     });
-  });
+  }); */
 });

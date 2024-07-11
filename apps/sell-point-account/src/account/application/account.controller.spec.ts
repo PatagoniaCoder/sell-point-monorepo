@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AccountController } from './account.controller';
 import { AccountService } from './account.service';
+import { AccountCreateMessage } from './dto/account.dto';
+import { RpcException } from '@nestjs/microservices';
 
 describe('AccountController', () => {
   let controller: AccountController;
   let service: AccountService;
-
+  const payload = new AccountCreateMessage();
+  payload.key = '123456-123456';
+  payload.value = { accountNumber: '0001', description: 'test account' };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AccountController],
@@ -44,6 +48,7 @@ describe('AccountController', () => {
       expect(service.findByCriteria).toHaveBeenCalled();
     });
   });
+
   describe('findAllAccounts endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'findAll');
@@ -56,18 +61,37 @@ describe('AccountController', () => {
       expect(service.findAll).toHaveBeenCalled();
     });
   });
-  describe('createAccount endpoint', () => {
+
+  describe('createAccountMessage endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'createAccount');
+      //jest.spyOn(controller.logger, 'error');
     });
-    it('should createAccount be defined', () => {
+
+    it('should createAccountMessage be defined', () => {
       expect(controller.createAccountMessage).toBeDefined();
     });
 
-    it('should createAccount have been called', () => {
-      controller.createAccountMessage(null);
-      expect(service.createAccount).toHaveBeenCalled();
+    it('should createAccount have been called', async () => {
+      await controller.createAccountMessage(payload);
+      expect(service.createAccount).toHaveBeenCalledWith(payload);
     });
+
+    it('should fail on createAccount and throw a "RpcException" exception', async () => {
+      jest.spyOn(service, 'createAccount').mockRejectedValue(new Error('Something is wrong!'));
+      await controller.createAccountMessage(payload).catch((err) => {
+        expect(err).toBeInstanceOf(RpcException);
+      });
+    });
+
+    /* it('should fail on createAccount logger have been called', async () => {
+      jest
+        .spyOn(service, 'createAccount')
+        .mockRejectedValueOnce(new Error('Something is wrong!'));
+      await controller.createAccountMessage(payload).catch(() => {
+        expect(controller.logger.error).toHaveBeenCalled();
+      });
+    }); */
   });
 
   describe('deleteAccount endpoint', () => {
@@ -83,6 +107,7 @@ describe('AccountController', () => {
       expect(service.deleteAccount).toHaveBeenCalled();
     });
   });
+
   describe('updateAccount endpoint', () => {
     beforeEach(() => {
       jest.spyOn(service, 'updateAccount');

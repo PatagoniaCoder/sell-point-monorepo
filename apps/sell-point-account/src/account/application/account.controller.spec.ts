@@ -59,7 +59,7 @@ describe('AccountController', () => {
       expect(controller.findAllAccounts).toBeDefined();
     });
     it('should findAll have been called', () => {
-      controller.findAllAccounts();
+      controller.findAllAccounts(null);
       expect(service.findAll).toHaveBeenCalled();
     });
   });

@@ -19,9 +19,11 @@ import { AccountEventPattern } from '../shared/event.pattern';
 import {
   AccountCreateDto,
   AccountUpdateDto,
+  AllAccountsDto,
   FilterAccountDto,
   ResponseMessage,
 } from './dto/account.dto';
+import { PageDto } from './dto/page.dto';
 
 @Injectable()
 export class AccountService implements OnModuleInit, BeforeApplicationShutdown {
@@ -73,7 +75,7 @@ export class AccountService implements OnModuleInit, BeforeApplicationShutdown {
 
   async findByCriteria(filterAccount: FilterAccountDto): Promise<EntityAccount[]> {
     const { filters, order, offset, limit } = filterAccount;
-    const mapFilters = filters.filters.map(
+    const mapFilters = filters.map(
       (filter) =>
         new Map([
           [EFilter.FIELD, filter.field.value],
@@ -91,7 +93,17 @@ export class AccountService implements OnModuleInit, BeforeApplicationShutdown {
     return await this.accountRepository.findByCriteria(criteria);
   }
 
-  async findAll(): Promise<EntityAccount[]> {
-    return await firstValueFrom(this.accountMicroService.send('account.findAll', {}));
+  async findAll(q: AllAccountsDto): Promise<PageDto<EntityAccount>> {
+    return await firstValueFrom(
+      this.accountMicroService.send('account.findAll', JSON.stringify(q)).pipe(
+        timeout(5000),
+        catchError((err) => {
+          this.logger.error(err);
+          return throwError(
+            () => new HttpException('Cant find all accounts', HttpStatus.BAD_REQUEST),
+          );
+        }),
+      ),
+    );
   }
 }

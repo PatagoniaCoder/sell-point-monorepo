@@ -9,10 +9,12 @@ import { AccountValue } from '../domain/value-object/account.value';
 import {
   AccountCreateMessage,
   AccountUpdateDto,
+  AllAccountsDto,
   BalanceCreatedDto,
   FilterAccountDto,
   ResponseMessage,
 } from './dto/account.dto';
+import { PageDto } from './dto/page.dto';
 
 @Injectable()
 export class AccountService implements OnModuleDestroy {
@@ -67,8 +69,16 @@ export class AccountService implements OnModuleDestroy {
     return await this.accountRepository.findByCriteria(criteria);
   }
 
-  async findAll(): Promise<EntityAccount[]> {
-    return await this.accountRepository.findAllAccounts();
+  async findAll(q: AllAccountsDto): Promise<PageDto<EntityAccount>> {
+    const { order, offset, limit } = q;
+    const criteria = new Criteria(
+      Filters.fromValues([]),
+      Order.fromValues(order.orderBy.value, order.orderType.value),
+      limit,
+      offset,
+    );
+
+    return await this.accountRepository.findAllAccounts(criteria);
   }
 
   async balanceCreatedSuccess(payload: BalanceCreatedDto) {

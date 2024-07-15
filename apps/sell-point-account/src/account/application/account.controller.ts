@@ -1,18 +1,20 @@
 import { Body, Controller, Logger } from '@nestjs/common';
 import { EventPattern, MessagePattern, Payload, RpcException } from '@nestjs/microservices';
-import { EntityAccount } from '../domain/entity/entity-account';
-import { AccountService } from './account.service';
-import {
-  FilterAccountDto,
-  AccountCreateMessage,
-  AccountUpdateDto,
-  BalanceCreatedDto,
-  ResponseMessage,
-} from './dto/account.dto';
 import {
   AccountEventPattern,
   BalanceEventPattern,
 } from '@sell-point-account-share/infrastructure/event.pattern';
+import { EntityAccount } from '../domain/entity/entity-account';
+import { AccountService } from './account.service';
+import {
+  AccountCreateMessage,
+  AccountUpdateDto,
+  AllAccountsDto,
+  BalanceCreatedDto,
+  FilterAccountDto,
+  ResponseMessage,
+} from './dto/account.dto';
+import { PageDto } from './dto/page.dto';
 
 @Controller()
 export class AccountController {
@@ -25,8 +27,11 @@ export class AccountController {
   }
 
   @MessagePattern(AccountEventPattern.FIND_ALL)
-  async findAllAccounts(): Promise<EntityAccount[]> {
-    return await this.accountService.findAll();
+  async findAllAccounts(@Payload() q: AllAccountsDto): Promise<PageDto<EntityAccount>> {
+    return await this.accountService.findAll(q).catch((err) => {
+      this.logger.error(err);
+      throw new RpcException(err);
+    });
   }
 
   @MessagePattern(AccountEventPattern.CREATE)

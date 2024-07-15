@@ -2,7 +2,8 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { ExceptionFilter } from '@sell-point-account/application/filters/rpc-exception-filter';
+import { BadRequestExceptionFilter } from '@sell-point-account/application/filters/all-exception.filter';
+import { RPCExceptionFilter } from '@sell-point-account/application/filters/rpc-exception.filter';
 import { SellPointAccountModule } from './sell-point-account.module';
 
 async function bootstrap() {
@@ -32,10 +33,11 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      whitelist: true,
     }),
   );
 
-  app.useGlobalFilters(new ExceptionFilter());
+  app.useGlobalFilters(new RPCExceptionFilter(), new BadRequestExceptionFilter());
 
   const logger = new Logger('SellPointAccount');
 

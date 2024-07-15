@@ -1,11 +1,20 @@
-import { PartialType } from '@nestjs/swagger';
+import { OmitType, PartialType } from '@nestjs/swagger';
 import { EOperator, EOrderTypes } from '@sell-point-account-share/domain/criteria';
 import { Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsObject,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 
 class StringValueObjectDto {
   @IsString()
-  value: string;
+  value: string = 'uuid';
 }
 
 class FilterFieldDto extends StringValueObjectDto {}
@@ -36,15 +45,15 @@ class OrderByDto extends StringValueObjectDto {}
 
 class OrderTypesDto {
   @IsEnum(EOrderTypes)
-  value: EOrderTypes;
+  value: EOrderTypes = EOrderTypes.ASC;
 }
 
 class OrderDto {
   @Type(() => OrderByDto)
-  orderBy: OrderByDto;
+  orderBy: OrderByDto = new OrderByDto();
 
   @Type(() => OrderTypesDto)
-  orderType: OrderTypesDto;
+  orderType: OrderTypesDto = new OrderTypesDto();
 }
 
 export class FilterAccountDto {
@@ -53,15 +62,24 @@ export class FilterAccountDto {
   filters: FiltersDto;
 
   @Type(() => OrderDto)
-  order: OrderDto;
+  @IsOptional()
+  order?: OrderDto = new OrderDto();
 
-  @IsNumber()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @IsOptional()
   limit?: number;
 
-  @IsNumber()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  @Max(50)
+  @IsOptional()
   offset?: number;
 }
 
+export class AllAccountsDto extends OmitType(FilterAccountDto, ['filters'] as const) {}
 class AccountCreateDto {
   @IsString()
   accountNumber: string;

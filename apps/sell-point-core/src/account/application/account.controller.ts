@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { EntityAccount } from '../domain/entity/entity-account';
@@ -14,9 +15,11 @@ import { AccountService } from './account.service';
 import {
   AccountCreateDto,
   AccountUpdateDto,
+  AllAccountsDto,
   FilterAccountDto,
   ResponseMessage,
 } from './dto/account.dto';
+import { PageDto } from './dto/page.dto';
 
 @ApiTags('Account')
 @Controller('account')
@@ -31,8 +34,10 @@ export class AccountController {
   }
 
   @Get()
-  async findAllAccounts(): Promise<EntityAccount[]> {
-    return await this.accountService.findAll();
+  async findAllAccounts(@Query() q: AllAccountsDto): Promise<PageDto<EntityAccount>> {
+    return await this.accountService.findAll(q).catch((err) => {
+      throw new BadRequestException('Something is wrong', err.message);
+    });
   }
 
   @Post()

@@ -26,7 +26,7 @@ describe('TransactionTypeService', () => {
 
   it('should be execute the findByCriteria', async () => {
     const dto: FilterAccountDto = {
-      filters: { filters: [] },
+      filters: [],
       order: { orderBy: { value: 'any' }, orderType: { value: EOrderTypes.ASC } },
       limit: 0,
       offset: 0,

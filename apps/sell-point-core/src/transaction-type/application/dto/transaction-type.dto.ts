@@ -1,8 +1,17 @@
 import { OmitType, PartialType } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsString, IsEnum, ValidateNested, IsNumber, IsUUID } from 'class-validator';
-import { EntityTransactionType } from '../../domain/entity/entity-transaction-type';
 import { EOperator, EOrderTypes } from '@sell-point-core-share/domain/criteria';
+import { Type } from 'class-transformer';
+import {
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+import { EntityTransactionType } from '../../domain/entity/entity-transaction-type';
 
 class StringValueObjectDto {
   @IsString()
@@ -28,10 +37,6 @@ class FilterDto {
   @Type(() => FilterValueDto)
   value: FilterValueDto;
 }
-class FiltersDto {
-  @Type(() => FilterDto)
-  filters: FilterDto[];
-}
 
 class OrderByDto extends StringValueObjectDto {}
 
@@ -42,25 +47,35 @@ class OrderTypesDto {
 
 class OrderDto {
   @Type(() => OrderByDto)
-  orderBy: OrderByDto;
+  @IsOptional()
+  orderBy?: OrderByDto = new OrderByDto();
 
   @Type(() => OrderTypesDto)
-  orderType: OrderTypesDto;
+  @IsOptional()
+  orderType?: OrderTypesDto = new OrderTypesDto();
 }
 
 export class FilterTransactionTypeDto {
   @ValidateNested({ each: true })
-  @Type(() => FiltersDto)
-  filters: FiltersDto;
+  @Type(() => FilterDto)
+  filters: FilterDto[];
 
   @Type(() => OrderDto)
-  order: OrderDto;
+  @IsOptional()
+  order?: OrderDto = new OrderDto();
 
-  @IsNumber()
-  limit?: number;
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(50)
+  @IsOptional()
+  limit?: number = 20;
 
-  @IsNumber()
-  offset?: number;
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  offset?: number = 0;
 }
 
 export class TransactionTypeResponseDto extends EntityTransactionType {

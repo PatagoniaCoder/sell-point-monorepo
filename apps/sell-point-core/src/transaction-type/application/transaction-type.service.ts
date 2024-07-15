@@ -36,7 +36,7 @@ export class TransactionTypeService {
 
   async findByCriteria(filterTransactionType: FilterTransactionTypeDto) {
     const { filters, order, offset, limit } = filterTransactionType;
-    const mapFilters = filters.filters.map(
+    const mapFilters = filters.map(
       (filter) =>
         new Map([
           [EFilter.FIELD, filter.field.value],

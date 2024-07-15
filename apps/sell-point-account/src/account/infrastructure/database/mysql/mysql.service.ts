@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Criteria } from '@sell-point-account-share/domain/criteria';
 import { MySqlCriteriaConverter } from '@sell-point-account-share/infrastructure/database/mysql/mysql-criteria-convertor';
+import { PageDto, PageMetaDto } from '@sell-point-account/application/dto/page.dto';
 import { AccountRepository } from '@sell-point-account/domain/repository/account.repository';
 import { AccountValue } from '@sell-point-account/domain/value-object/account.value';
 import { Repository } from 'typeorm';
@@ -21,8 +22,16 @@ export class MysqlService extends MySqlCriteriaConverter implements AccountRepos
     return await this.accountRepository.save(newAccount);
   }
 
-  async findAllAccounts(): Promise<AccountEntity[]> {
-    return await this.accountRepository.find({ take: 20 });
+  async findAllAccounts(q: Criteria): Promise<PageDto<AccountEntity>> {
+    const { order, limit, skip } = this.convert(q);
+    const entities = await this.accountRepository.find({
+      order: order,
+      take: limit,
+      skip: skip,
+    });
+    const itemCount = await this.accountRepository.count();
+    const pageMetaDto = new PageMetaDto({ pageOptionsDto: q, itemCount });
+    return new PageDto(entities, pageMetaDto);
   }
 
   async findByCriteria(queryParams: Criteria): Promise<AccountEntity[]> {
